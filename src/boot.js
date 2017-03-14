@@ -15,7 +15,7 @@ module.exports = function(app, options) {
   const models = app.models();
   const types = ast(models);
   types.Viewer = viewerAst(models);
-  const typeDefObjs = typeDefs(types);
+  const typeDefObjs = typeDefs(types, models);
 
   const schema = new GraphQLSchema({
     query: new GraphQLObjectType({
@@ -25,7 +25,9 @@ module.exports = function(app, options) {
         viewer: {
           type: typeDefObjs.Viewer,
           args: {},
-          resolve: (root, args, context) => ({ id: 'foo' })
+          resolve: (root, args, context) => {
+            return { id: 'foo' };
+          }
         }
       }
     })

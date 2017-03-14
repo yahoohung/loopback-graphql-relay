@@ -27,10 +27,7 @@ module.exports = function abstractTypes(models) {
       args: connectionArgs,
 			// gqlType: utils.connectionTypeName(model),
       gqlType: model.modelName,
-      list: true,
-      resolver: (obj, args, context) => {
-        execution.findAll(model, obj, args, context);
-      }
+      list: true
     };
   });
 

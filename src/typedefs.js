@@ -20,8 +20,11 @@ const {
 const CustomGraphQLDateType = require('graphql-custom-datetype');
 const GraphQLJSON = require('graphql-type-json');
 
+const execution = require('./execution');
+
 const types = {};
 let typeObjs = {};
+let models = {};
 const connectionTypes = {};
 
 /**
@@ -77,6 +80,12 @@ const generateType = (name) => {
           fields[name].type = getType(field.gqlType);
         }
 
+        fields[name].resolve = (obj, args, context) => {
+					return execution.findAll(models[field.gqlType], obj, args, context)
+					.then(res => {
+						console.log(res);
+					});
+				};
       });
 
       def.fields = fields;
@@ -144,9 +153,14 @@ const getType = (name) => {
   }
 };
 
-module.exports = function generateTypeDefs(_typeObjs) {
+module.exports = function generateTypeDefs(_typeObjs, _models) {
 
   typeObjs = _typeObjs;
+  models = {};
+
+  _.forEach(_models, function(model){
+		models[model.modelName] = model;
+	});
 
 	// Create types from defs
   _.forEach(typeObjs, (def, name) => {

@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = require('./lib/boot.js');
+module.exports = require('./src/boot.js');

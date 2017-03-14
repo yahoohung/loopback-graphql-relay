@@ -1,56 +1,157 @@
 'use strict';
 
 const _ = require('lodash');
-const base = require('./base');
 
-function args(args) {
-    return args ? `(${args})` : '';
-}
+const {
+	GraphQLObjectType,
+	GraphQLEnumType,
+	GraphQLID,
+	GraphQLString,
+	GraphQLBoolean,
+	GraphQLFloat,
+	GraphQLInt
+} = require('graphql');
 
-function generateInputField(field, name) {
-    return `
-        ${name} : ${field.list ? '[' : ''}${field.gqlType}${field.scalar ? '' : 'Input'}${field.required ? '!' : ''} ${field.list ? ']' : ''}`;
-}
+const {
+	globalIdField,
+	connectionDefinitions
+} = require('graphql-relay');
 
-function generateOutputField(field, name) {
-    return `${name} ${args(field.args)} : ${field.list ? '[' : ''}${field.gqlType}${field.required ? '!' : ''} ${field.list ? ']' : ''}`;
-}
+const CustomGraphQLDateType = require('graphql-custom-datetype');
+const GraphQLJSON = require('graphql-type-json');
 
-module.exports = function generateTypeDefs(types) {
-    const categories = {
-        TYPE: (type, name) => {
-            let output = _.reduce(type.fields, (result, field, fieldName) => {
-                return result + generateOutputField(field, fieldName) + ' \n ';
-            }, '');
+const types = {};
+let typeObjs = {};
+const connectionTypes = {};
 
-            var result = `
-                type ${name} {
-                    ${output}
-                }`;
-            if (type.input) {
-                let input = _.reduce(type.fields, (result, field, fieldName) => {
-                    if (!field.relation) {
-                        return result + generateInputField(field, fieldName) + ' \n ';
-                    } else {
-                        return result;
-                    }
+/**
+ * Get or create connection object
+ * @param {*} name
+ */
+const getConnection = (name) => {
+  if (!connectionTypes[name]) {
+    connectionTypes[name] = connectionDefinitions({ name, nodeType: getType(name) }).connectionType;
+  }
+  return connectionTypes[name];
+};
 
-                }, '');
-                result += `input ${name}Input {
-                    ${input}
-                }`;
-            }
-            return result;
-        },
-        UNION: (type, name) => {
-            return `union ${name} = ${type.values.join(' | ')}`;
-        },
-        ENUM: (type, name) => {
-            return `enum ${name} {${type.values.join(' ')}}`;
+/**
+ * Dynamically generate type based on the definition in typeObjs
+ * @param {*} name
+ */
+const generateType = (name) => {
+  if (!types[name]) {
+    const def = _.find(typeObjs, (o, n) => n === name);
+
+    if (!def) {
+      return null;
+    }
+
+    def.name = name;
+
+    if (def.category === 'TYPE') {
+      const fields = {};
+
+      _.forEach(def.fields, (field, name) => {
+
+        if (field.hidden === true) {
+          return;
         }
-    };
 
-    return _.reduce(types, (result, type, name) => {
-        return result + categories[type.category](type, name);
-    }, base.typeDefs);
+        if (field.relation === true) {
+          // fields[name].type = getConnection(field.gqlType);
+          return;
+        }
+
+        fields[name] = { name };
+
+        // TODO: improve id check
+        if (name === 'id') {
+          fields[name] = globalIdField(name);
+          return;
+        }
+
+        if (field.list) {
+          fields[name].type = getConnection(field.gqlType);
+        } else {
+          fields[name].type = getType(field.gqlType);
+        }
+
+      });
+
+      def.fields = fields;
+
+      types[name] = new GraphQLObjectType(def);
+    } else if (def.category === 'ENUM') {
+      const values = {};
+      _.forEach(def.values, (val) => { values[val] = { value: val }; });
+      def.values = values;
+
+      types[name] = new GraphQLEnumType(def);
+    }
+  }
+  return types[name];
+};
+
+/**
+ * Get a type by name
+ * @param {*} name
+ */
+const getType = (name) => {
+
+  if (types[name]) {
+    return types[name];
+  }
+
+  switch (name) {
+    case 'ID':
+      return GraphQLID;
+
+    case 'String':
+      return GraphQLString;
+
+    case 'Boolean':
+      return GraphQLBoolean;
+
+    case 'Float':
+      return GraphQLFloat;
+
+    case 'Int':
+      return GraphQLInt;
+
+    case 'Date':
+      return CustomGraphQLDateType;
+
+    // case 'File':
+    //   return FileType;
+
+    // case 'GeoPoint':
+    //   return GeoPointType;
+
+    case 'Json':
+    case 'JSON':
+      return GraphQLJSON;
+
+    // case 'Viewer':
+    //   return require('./Viewer');
+
+    default:
+
+      if (typeObjs && typeObjs[name]) {
+        return generateType(name);
+      }
+      return null;
+  }
+};
+
+module.exports = function generateTypeDefs(_typeObjs) {
+
+  typeObjs = _typeObjs;
+
+	// Create types from defs
+  _.forEach(typeObjs, (def, name) => {
+    getType(name);
+  });
+
+  return types;
 };

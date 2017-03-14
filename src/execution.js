@@ -11,14 +11,17 @@ function buildSelector(model, args) {
 
     selector.skip = args.first - args.last || 0;
     selector.limit = args.last || args.first;
-    selector.order = model.getIdName() + (end ? ' DESC' : ' ASC');
-    if (begin) {
-        selector.where[model.getIdName()] = selector[model.getIdName()] || {};
-        selector.where[model.getIdName()].gt = begin;
-    }
-    if (end) {
-        selector.where[model.getIdName()] = selector[model.getIdName()] || {};
-        selector.where[model.getIdName()].lt = end;
+
+    if (model.getIdName && model.getIdName()){
+        selector.order = model.getIdName() + (end ? ' DESC' : ' ASC');
+        if (begin) {
+            selector.where[model.getIdName()] = selector[model.getIdName()] || {};
+            selector.where[model.getIdName()].gt = begin;
+        }
+        if (end) {
+            selector.where[model.getIdName()] = selector[model.getIdName()] || {};
+            selector.where[model.getIdName()].lt = end;
+        }
     }
     return selector;
 }
@@ -47,6 +50,10 @@ function getList(model, obj, args) {
 }
 
 function findAll(model, obj, args, context) {
+    return getList(model, obj, args)
+        // .then(data => {
+        //     return Promise.resolve(_.map(data, o => o.toJSON()));
+        // });
     const response = {
         args: args
     };

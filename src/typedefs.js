@@ -14,7 +14,8 @@ const {
 
 const {
 	globalIdField,
-	connectionDefinitions
+	connectionDefinitions,
+	connectionFromPromisedArray
 } = require('graphql-relay');
 
 const CustomGraphQLDateType = require('graphql-custom-datetype');
@@ -55,7 +56,7 @@ const generateType = (name) => {
     if (def.category === 'TYPE') {
       const fields = {};
 
-      _.forEach(def.fields, (field, name) => {
+      _.forEach(def.fields, (field, fieldName) => {
 
         if (field.hidden === true) {
           return;
@@ -66,26 +67,26 @@ const generateType = (name) => {
           return;
         }
 
-        fields[name] = { name };
+        fields[fieldName] = { fieldName };
 
         // TODO: improve id check
-        if (name === 'id') {
-          fields[name] = globalIdField(name);
+        if (fieldName === 'id') {
+          fields[fieldName] = globalIdField(name);
           return;
         }
 
         if (field.list) {
-          fields[name].type = getConnection(field.gqlType);
+          fields[fieldName].type = getConnection(field.gqlType);
         } else {
-          fields[name].type = getType(field.gqlType);
+          fields[fieldName].type = getType(field.gqlType);
         }
 
-        fields[name].resolve = (obj, args, context) => {
-					return execution.findAll(models[field.gqlType], obj, args, context)
-					.then(res => {
-						console.log(res);
-					});
-				};
+        fields[fieldName].resolve = (obj, args, context) => {
+          if (!field.list) {
+            return _.isNil(obj[fieldName]) ? null : obj[fieldName];
+          }
+          return connectionFromPromisedArray(execution.findAll(models[field.gqlType], obj, args, context), args);
+        };
       });
 
       def.fields = fields;
@@ -158,9 +159,9 @@ module.exports = function generateTypeDefs(_typeObjs, _models) {
   typeObjs = _typeObjs;
   models = {};
 
-  _.forEach(_models, function(model){
-		models[model.modelName] = model;
-	});
+  _.forEach(_models, (model) =>  {
+    models[model.modelName] = model;
+  });
 
 	// Create types from defs
   _.forEach(typeObjs, (def, name) => {

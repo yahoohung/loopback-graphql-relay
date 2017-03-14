@@ -23,7 +23,7 @@
     "publish:patch": "npm run test && npm version patch && npm run changelog"
   },
   "repository": {
-    "url": "git+https://github.com/tallyb/loopback-graphql.git",
+    "url": "git+https://github.com/BlueEastCode/loopback-graphql-relay.git",
     "type": "git"
   },
   "keywords": [
@@ -38,9 +38,9 @@
   "author": "Tally Barak <tally.barak@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tallyb/loopback-graphql/issues"
+    "url": "https://github.com/BlueEastCode/loopback-graphql-relay/issues"
   },
-  "homepage": "https://github.com/tallyb/loopback-graphql#readme",
+  "homepage": "https://github.com/BlueEastCode/loopback-graphql-relay#readme",
   "dependencies": {
     "body-parser": "^1.15.2",
     "graphql": "^0.8.2",

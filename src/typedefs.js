@@ -15,6 +15,7 @@ const {
 const {
 	globalIdField,
 	connectionDefinitions,
+	connectionFromArray,
 	connectionFromPromisedArray
 } = require('graphql-relay');
 
@@ -81,12 +82,30 @@ const generateType = (name) => {
           fields[fieldName].type = getType(field.gqlType);
         }
 
-        fields[fieldName].resolve = (obj, args, context) => {
-          if (!field.list) {
-            return _.isNil(obj[fieldName]) ? null : obj[fieldName];
-          }
-          return connectionFromPromisedArray(execution.findAll(models[field.gqlType], obj, args, context), args);
-        };
+				// If no resolver available, add one
+        if (!field.resolve) {
+          fields[fieldName].resolve = (obj, args, context) => {
+
+            const relation = (field.rel && field.rel.type) ? field.rel.type : null;
+
+            if (field.scalar || relation === 'embedsOne') {
+              return _.isNil(obj[fieldName]) ? null : obj[fieldName];
+            }
+
+            if (relation === 'embedsMany') {
+              const array = _.isNil(obj[fieldName]) ? [] : obj[fieldName];
+              return connectionFromArray(array, args);
+            }
+
+            if (field.list) {
+              return connectionFromPromisedArray(execution.findAll(models[field.gqlType], obj, args, context), args);
+            }
+
+            return null;
+          };
+        }
+
+        fields[fieldName] = Object.assign(field, fields[fieldName]);
       });
 
       def.fields = fields;

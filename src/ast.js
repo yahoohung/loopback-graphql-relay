@@ -99,6 +99,9 @@ function mapProperty(model, property, modelName, propertyName) {
     if (propertyType.name === 'ModelConstructor' && property.defaultFn !== 'now') {
         currentProperty.gqlType = propertyType.modelName;
         let union = propertyType.modelName.split('|');
+
+        currentProperty.rel = _.find(model.relations, (rel, name) => propertyName === rel.keyFrom);
+
         //type is a union
         if (union.length > 1) { // union type
             types[typeName] = { // creating a new union type
@@ -122,6 +125,7 @@ function mapProperty(model, property, modelName, propertyName) {
 function mapRelation(rel, modelName, relName) {
     types[modelName].fields[relName] = {
         relation: true,
+        relationType: rel.type,
         embed: rel.embed,
         gqlType: utils.connectionTypeName(rel.modelTo),
         args: PAGINATION,
@@ -306,16 +310,15 @@ module.exports = function abstractTypes(models) {
             input: true,
             fields: {}
         };
-            console.log(model.modelName);
 
         _.forEach(model.definition.properties, (property, key) => {
             mapProperty(model, property, utils.singularModelName(model), key);
         });
 
-        mapConnection(model);
+        // mapConnection(model);
         _.forEach(utils.sharedRelations(model), rel => {
             mapRelation(rel, utils.singularModelName(model), rel.name);
-            mapConnection(rel.modelTo);
+            // mapConnection(rel.modelTo);
         });
     });
     return types;

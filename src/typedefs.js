@@ -17,7 +17,6 @@ const {
 	globalIdField,
 	connectionArgs,
 	connectionDefinitions,
-	connectionFromArray,
 	connectionFromPromisedArray
 } = require('graphql-relay');
 
@@ -58,7 +57,8 @@ const generateType = (name) => {
 
     if (def.category === 'TYPE') {
 
-      def._fields = def.fields;
+      def._fields = Object.assign({}, def.fields);
+			def.fields = null;
 
       def.fields = () => {
         const fields = {};
@@ -88,7 +88,7 @@ const generateType = (name) => {
           }
 
 					// If no resolver available, add one
-          if (!field.resolve) {
+          if (_.isNil(field.resolver)) {
             fields[fieldName].resolve = (obj, args, context) => {
 
               if (field.relation) {
@@ -97,6 +97,8 @@ const generateType = (name) => {
 
               return _.isNil(obj[fieldName]) ? null : obj[fieldName];
             };
+          } else {
+            fields[fieldName].resolve = field.resolver;
           }
 
           fields[fieldName] = Object.assign(field, fields[fieldName]);

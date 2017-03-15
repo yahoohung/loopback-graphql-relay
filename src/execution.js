@@ -50,7 +50,7 @@ function getList(model, obj, args) {
 }
 
 function findAll(model, obj, args, context) {
-    return getList(model, obj, args)
+    return getList(model, obj, args);
         // .then(data => {
         //     return Promise.resolve(_.map(data, o => o.toJSON()));
         // });

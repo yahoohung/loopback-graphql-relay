@@ -4,6 +4,10 @@ const _ = require('lodash');
 const utils = require('./utils');
 const execution = require('./execution.js');
 
+const {
+	connectionFromPromisedArray
+} = require('graphql-relay');
+
 /*** Loopback Types - GraphQL types
         any - JSON
         Array - [JSON]
@@ -130,7 +134,7 @@ function mapRelation(rel, modelName, relName) {
         gqlType: rel.modelTo.modelName,
         args: PAGINATION,
         resolver: (obj, args, context) => {
-            return execution.findRelated(rel, obj, args, context);
+            return connectionFromPromisedArray(execution.findRelated(rel, obj, args, context), args);
         }
     };
 }

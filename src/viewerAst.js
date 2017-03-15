@@ -21,7 +21,7 @@ module.exports = function abstractTypes(models) {
     }
 
     Viewer.fields[_.lowerFirst(model.pluralModelName)] = {
-      // relation: true,
+      relation: true,
       // root: true,
       // name: model.modelName,
       args: connectionArgs,

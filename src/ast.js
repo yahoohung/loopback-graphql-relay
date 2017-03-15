@@ -127,7 +127,7 @@ function mapRelation(rel, modelName, relName) {
         relation: true,
         relationType: rel.type,
         embed: rel.embed,
-        gqlType: utils.connectionTypeName(rel.modelTo),
+        gqlType: rel.modelTo.modelName,
         args: PAGINATION,
         resolver: (obj, args, context) => {
             return execution.findRelated(rel, obj, args, context);

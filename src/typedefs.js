@@ -5,6 +5,7 @@ const _ = require('lodash');
 const {
 	GraphQLObjectType,
 	GraphQLEnumType,
+	GraphQLList,
 	GraphQLID,
 	GraphQLString,
 	GraphQLBoolean,
@@ -14,6 +15,7 @@ const {
 
 const {
 	globalIdField,
+	connectionArgs,
 	connectionDefinitions,
 	connectionFromArray,
 	connectionFromPromisedArray
@@ -55,60 +57,53 @@ const generateType = (name) => {
     def.name = name;
 
     if (def.category === 'TYPE') {
-      const fields = {};
 
-      _.forEach(def.fields, (field, fieldName) => {
+      def._fields = def.fields;
 
-        if (field.hidden === true) {
-          return;
-        }
+      def.fields = () => {
+        const fields = {};
 
-        if (field.relation === true) {
-          // fields[name].type = getConnection(field.gqlType);
-          return;
-        }
+        _.forEach(def._fields, (field, fieldName) => {
 
-        fields[fieldName] = { fieldName };
+          if (field.hidden === true) {
+            return;
+          }
 
-        // TODO: improve id check
-        if (fieldName === 'id') {
-          fields[fieldName] = globalIdField(name);
-          return;
-        }
+          fields[fieldName] = { fieldName };
 
-        if (field.list) {
-          fields[fieldName].type = getConnection(field.gqlType);
-        } else {
-          fields[fieldName].type = getType(field.gqlType);
-        }
+					// TODO: improve id check
+          if (fieldName === 'id') {
+            fields[fieldName] = globalIdField(name);
+            return;
+          }
 
-				// If no resolver available, add one
-        if (!field.resolve) {
-          fields[fieldName].resolve = (obj, args, context) => {
+          if (field.relation === true) {
+            fields[fieldName].args = connectionArgs;
+            fields[fieldName].type = getConnection(field.gqlType);
+          } else if (field.list) {
+						// fields[fieldName].type = getConnection(field.gqlType);
+            fields[fieldName].type = new GraphQLList(getType(field.gqlType));
+          } else {
+            fields[fieldName].type = getType(field.gqlType);
+          }
 
-            const relation = (field.rel && field.rel.type) ? field.rel.type : null;
+					// If no resolver available, add one
+          if (!field.resolve) {
+            fields[fieldName].resolve = (obj, args, context) => {
 
-            if (field.scalar || relation === 'embedsOne') {
+              if (field.relation) {
+                return connectionFromPromisedArray(execution.findAll(models[field.gqlType], obj, args, context), args);
+              }
+
               return _.isNil(obj[fieldName]) ? null : obj[fieldName];
-            }
+            };
+          }
 
-            if (relation === 'embedsMany') {
-              const array = _.isNil(obj[fieldName]) ? [] : obj[fieldName];
-              return connectionFromArray(array, args);
-            }
+          fields[fieldName] = Object.assign(field, fields[fieldName]);
+        });
 
-            if (field.list) {
-              return connectionFromPromisedArray(execution.findAll(models[field.gqlType], obj, args, context), args);
-            }
-
-            return null;
-          };
-        }
-
-        fields[fieldName] = Object.assign(field, fields[fieldName]);
-      });
-
-      def.fields = fields;
+        return fields;
+      };
 
       types[name] = new GraphQLObjectType(def);
     } else if (def.category === 'ENUM') {

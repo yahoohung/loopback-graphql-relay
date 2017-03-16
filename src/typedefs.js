@@ -15,7 +15,7 @@ const {
 
 const {
 	globalIdField,
-	connectionArgs,
+	connectionArgs: relayConnectionArgs,
 	connectionDefinitions,
 	connectionFromPromisedArray
 } = require('graphql-relay');
@@ -24,7 +24,6 @@ const CustomGraphQLDateType = require('graphql-custom-datetype');
 const GraphQLJSON = require('graphql-type-json');
 
 const execution = require('./execution');
-
 const types = {};
 let typeObjs = {};
 let models = {};
@@ -58,7 +57,7 @@ const generateType = (name) => {
     if (def.category === 'TYPE') {
 
       def._fields = Object.assign({}, def.fields);
-			def.fields = null;
+      def.fields = null;
 
       def.fields = () => {
         const fields = {};
@@ -169,6 +168,10 @@ const getType = (name) => {
       return null;
   }
 };
+
+const connectionArgs = Object.assign({
+  where: { type: getType('JSON') },
+}, relayConnectionArgs);
 
 module.exports = function generateTypeDefs(_typeObjs, _models) {
 

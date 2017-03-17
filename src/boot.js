@@ -15,13 +15,17 @@ module.exports = function(app, options) {
   const models = app.models();
   const types = ast(models);
   types.Viewer = viewerAst(models);
+  types.node = {
+    gqlType: 'node'
+  };
+
   const typeDefObjs = typeDefs(types, models);
 
   const schema = new GraphQLSchema({
     query: new GraphQLObjectType({
       name: 'Query',
       fields: {
-        // node: nodeField,
+        node: typeDefObjs.node,
         viewer: {
           type: typeDefObjs.Viewer,
           args: {},

@@ -15,6 +15,8 @@ const {
 
 const {
 	globalIdField,
+	fromGlobalId,
+	nodeDefinitions: relayNodeDefinitions,
 	connectionArgs: relayConnectionArgs,
 	connectionDefinitions,
 	connectionFromPromisedArray
@@ -27,6 +29,7 @@ const execution = require('./execution');
 const types = {};
 let typeObjs = {};
 let models = {};
+let nodeDefinitions = {};
 const connectionTypes = {};
 
 /**
@@ -53,6 +56,11 @@ const generateType = (name) => {
     }
 
     def.name = name;
+
+    const idField = _.find(def.fields, (f, i) => i === 'id');
+    if (idField) {
+      def.interfaces = [nodeDefinitions.nodeInterface];
+    }
 
     if (def.category === 'TYPE') {
 
@@ -100,6 +108,10 @@ const generateType = (name) => {
             fields[fieldName].resolve = field.resolver;
           }
 
+          // if (field.gqlType === 'node') {
+          //   fields[fieldName] = fields[fieldName].type;
+          // }
+
           fields[fieldName] = Object.assign(field, fields[fieldName]);
         });
 
@@ -117,6 +129,19 @@ const generateType = (name) => {
   }
   return types[name];
 };
+
+function generateNodeDefinitions(models) {
+  let typeName;
+
+  nodeDefinitions = relayNodeDefinitions(
+    (globalId, context, { rootValue }) => {
+      const { type, id } = fromGlobalId(globalId);
+      typeName = type;
+      return models[type].findById(id);
+    },
+    obj => getType(typeName)
+  );
+}
 
 /**
  * Get a type by name
@@ -157,8 +182,9 @@ const getType = (name) => {
     case 'JSON':
       return GraphQLJSON;
 
-    // case 'Viewer':
-    //   return require('./Viewer');
+    case 'node':
+      types[name] = nodeDefinitions.nodeField;
+      return types[name];
 
     default:
 
@@ -177,6 +203,8 @@ module.exports = function generateTypeDefs(_typeObjs, _models) {
 
   typeObjs = _typeObjs;
   models = {};
+
+  generateNodeDefinitions(models);
 
   _.forEach(_models, (model) =>  {
     models[model.modelName] = model;

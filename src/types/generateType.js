@@ -1,0 +1,207 @@
+
+const _ = require('lodash');
+
+const {
+	GraphQLObjectType,
+	GraphQLEnumType,
+	GraphQLList
+} = require('graphql');
+
+const {
+	globalIdField,
+	fromGlobalId,
+	nodeDefinitions: relayNodeDefinitions,
+	connectionArgs: relayConnectionArgs,
+	connectionDefinitions,
+	connectionFromPromisedArray
+} = require('graphql-relay');
+
+// const type = require('./type');
+let { getType, getConnection } = require('./type');
+const { getTypeDef, getTypeDefs, generateTypeDefs } = require('./generateTypeDefs');
+
+/**
+ * Singleton Objects
+ */
+let models;
+let nodeDefinitions = {};
+
+/**
+ * Init
+ * @param {*} _models
+ */
+function init(_models) {
+  models = _models;
+  generateTypeDefs(models);
+  generateNodeDefinitions(models);
+}
+
+/**
+ * Handle cases where id field name is not 'id'
+ * @param {*} type
+ */
+const processIdField = (name, type) => {
+
+  if (!models[name] || !models[name].getIdName) {
+    return;
+  }
+
+  const idFieldName = models[name].getIdName();
+  const idField = _.find(type.fields, (f, i) => i === idFieldName);
+
+  if (_.isNil(idField)) {
+    return;
+  }
+
+  if (idFieldName !== 'id') {
+    // if (!_.isNil(type.fields.id)) {
+    //   type.fields._id = _.clone(type.fields.id);
+    // }
+
+    type.fields.id = idField;
+  }
+
+  if (idField) {
+    type.interfaces = [nodeDefinitions.nodeInterface];
+  }
+};
+
+function generateFieldArgs(field) {
+  const args = {};
+
+  _.forEach(field.meta.args, (arg, argName) => { 
+    // If doesnt have {generated: false} prop, then it is
+    // already built. Hence return it as is.
+    if (arg.generated !== false) {
+      args[argName] = arg;
+      return;
+    }
+
+    args[argName] = { type: getType(arg.type) };
+  });
+
+  return args;
+}
+
+function generateTypeFields(def) {
+  getType = require('./type').getType;
+  getConnection = require('./type').getConnection;
+
+  const fields = {};
+
+  _.forEach(def.meta.fields, (field, fieldName) => {
+
+    field = _.clone(field);
+
+    if (field.meta.hidden === true) {
+      return;
+    }
+
+    field.meta.name = fieldName;
+    delete field.generated;
+
+    // If it's an id field, make it a globalId
+    if (fieldName === 'id') {
+      fields.id = globalIdField(def.name, (o) => {
+        const idName = models[def.name].getIdName();
+        return o[idName];
+      });
+      return;
+    }
+
+    if (field.meta.relation === true) {
+      field.type = getConnection(field.meta.type);
+    } else if (field.meta.list) {
+      // field.type = getConnection(field.meta.type);
+      field.type = new GraphQLList(getType(field.meta.type));
+    } else {
+      field.type = getType(field.meta.type);
+    }
+
+    // Field arguments
+    field.args = generateFieldArgs(field);
+
+    // If no resolver available, add one
+    if (_.isNil(field.resolve)) {
+      field.resolve = (obj, args, context) => {
+
+        if (field.meta.relation) {
+          return connectionFromPromisedArray(findAll(models[field.meta.type], obj, args, context), args);
+        }
+
+        return _.isNil(obj[fieldName]) ? null : obj[fieldName];
+      };
+    } else {
+      field.resolve = field.resolve;
+    }
+
+    fields[fieldName] = field;
+  });
+
+  return fields;
+}
+
+/**
+ * Dynamically generate type based on the definition in typeDefs
+ * @param {*} name
+ * @param {*} def Type definition
+ */
+function generateType(name, def) {
+  // const def = _.find(getTypeDefs(), (o, n) => n === name);
+
+  if (!name || !def) {
+    return null;
+  }
+
+  // If def doesnt have {generated: false} prop, then it is
+  // already a type. Hence return it as is.
+  if (def.generated !== false) {
+    return def;
+  }
+
+  def = _.clone(def);
+  processIdField(name, def);
+
+  if (def.meta.category === 'TYPE') {
+
+    def.fields = () => generateTypeFields(def);
+
+    return new GraphQLObjectType(def);
+  } else if (def.category === 'ENUM') {
+    const values = {};
+    _.forEach(def.values, (val) => { values[val] = { value: val }; });
+    def.values = values;
+
+    return new GraphQLEnumType(def);
+  }
+}
+
+/**
+ *
+ * @param {*} models
+ */
+function generateNodeDefinitions(models) {
+  let typeName;
+
+  nodeDefinitions = relayNodeDefinitions(
+    (globalId, context, { rootValue }) => {
+      const { type, id } = fromGlobalId(globalId);
+      typeName = type;
+      return models[type].findById(id);
+    },
+    obj => getType(typeName)
+  );
+}
+
+/**
+ *
+ */
+function getNodeDefinitions() {
+  return nodeDefinitions;
+}
+
+module.exports = {
+  init,
+  generateType,
+  getNodeDefinitions
+};

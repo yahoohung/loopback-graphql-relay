@@ -6,42 +6,46 @@ const bodyParser = require('body-parser');
 // const _ = require('lodash');
 const { GraphQLSchema, GraphQLObjectType } = require('graphql');
 
+const { getSchema } = require('./schema/index');
+
+
 const ast = require('./ast');
 const viewerAst = require('./viewerAst');
 const resolvers = require('./resolvers');
 const typeDefs = require('./typedefs');
 
-const queryDefs = require('./defs/query');
+
+const getTypes = require('./types');
 
 module.exports = function(app, options) {
   const models = app.models();
 
 
-  const queryDefObjs = queryDefs(models);
+  const queryDefObjs = getTypes(models);
 
-  const types = ast(models);
-  types.Viewer = viewerAst(models);
-  types.node = {
-    gqlType: 'node'
-  };
+  const schema = getSchema(models);
 
-  const typeDefObjs = typeDefs(types, models);
+  // const types = ast(models);
+  // types.Viewer = viewerAst(models);
+  // types.node = {
+  //   gqlType: 'node'
+  // };
 
-  const schema = new GraphQLSchema({
-    query: new GraphQLObjectType({
-      name: 'Query',
-      fields: {
-        node: typeDefObjs.node,
-        viewer: {
-          type: typeDefObjs.Viewer,
-          args: {},
-          resolve: (root, args, context) => {
-            return { id: 'foo' };
-          }
-        }
-      }
-    })
-  });
+  // const typeDefObjs = typeDefs(types, models);
+
+  // const schema = new GraphQLSchema({
+  //   query: new GraphQLObjectType({
+  //     name: 'Query',
+  //     fields: {
+  //       node: typeDefObjs.node,
+  //       viewer: {
+  //         type: typeDefObjs.Viewer,
+  //         args: {},
+  //         resolve: (root, args, context) => ({ id: 'foo' })
+  //       }
+  //     }
+  //   })
+  // });
 
   const graphiqlPath = options.graphiqlPath || '/graphiql';
   const path = options.path || '/graphql';

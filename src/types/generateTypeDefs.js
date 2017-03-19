@@ -140,6 +140,7 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
     if (property.enum) { // enum has a dedicated type but no input type is required
       types[typeName] = {
         generated: false,
+        name: typeName,
         values: property.enum,
         meta: {
           category: 'ENUM'
@@ -158,6 +159,7 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
     if (union.length > 1) { // union type
       types[typeName] = { // creating a new union type
         generated: false,
+        name: typeName,
         meta: {
           category: 'UNION'
         },
@@ -167,6 +169,7 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
       currentProperty.meta.type = typeName;
       types[typeName] = {
         generated: false,
+        name: typeName,
         meta: {
           category: 'TYPE',
           input: true,
@@ -213,6 +216,7 @@ function mapRelation(rel, modelName, relName) {
 function mapType(model) {
   types[model.modelName] = {
     generated: false,
+    name: model.modelName,
     meta: {
       category: 'TYPE',
       fields: {}
@@ -237,6 +241,7 @@ function mapInputType(model) {
 
   types[modelName] = {
     generated: false,
+    name: modelName,
     meta: {
       category: 'TYPE',
       input: true,
@@ -253,10 +258,18 @@ function sharedRelations(model) {
   return _.pickBy(model.relations, rel => rel.modelTo && rel.modelTo.shared);
 }
 
+function getTypeDef(name) {
+  return types[name];
+}
+
+function getTypeDefs() {
+  return types;
+}
+
 /**
  * building all models types & relationships
  */
-module.exports = function abstractTypes(models) {
+function generateTypeDefs(models) {
   types.Viewer = generateViewer(models);
 
   _.forEach(models, (model) => {
@@ -265,4 +278,10 @@ module.exports = function abstractTypes(models) {
   });
 
   return types;
+}
+
+module.exports = {
+  getTypeDef,
+  getTypeDefs,
+  generateTypeDefs
 };

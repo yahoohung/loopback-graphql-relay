@@ -11,8 +11,14 @@ const viewerAst = require('./viewerAst');
 const resolvers = require('./resolvers');
 const typeDefs = require('./typedefs');
 
+const queryDefs = require('./defs/query');
+
 module.exports = function(app, options) {
   const models = app.models();
+
+
+  const queryDefObjs = queryDefs(models);
+
   const types = ast(models);
   types.Viewer = viewerAst(models);
   types.node = {

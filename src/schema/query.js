@@ -32,7 +32,11 @@ function generateViewer(models) {
           }
 
           fields[_.lowerFirst(model.pluralModelName)] = {
-            args: connectionArgs,
+            args: Object.assign({
+              where: {
+                type: getType('JSON')
+              },
+            }, connectionArgs),
             type: getConnection(model.modelName)
           };
         });

@@ -23,7 +23,7 @@ const { getTypeDef, getTypeDefs, generateTypeDefs } = require('./generateTypeDef
 /**
  * Singleton Objects
  */
-let models;
+const models = {};
 let nodeDefinitions = {};
 
 /**
@@ -31,7 +31,10 @@ let nodeDefinitions = {};
  * @param {*} _models
  */
 function init(_models) {
-  models = _models;
+  _.forEach(_models, (model) =>  {
+    models[model.modelName] = model;
+  });
+
   generateTypeDefs(models);
   generateNodeDefinitions(models);
 }

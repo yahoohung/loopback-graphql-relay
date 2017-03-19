@@ -45,43 +45,6 @@ function toTypes(union) {
 }
 
 /**
- * Generates definiton for the Viewer type
- * @param {*} models
- */
-function generateViewer(models) {
-
-  const Viewer = {
-    generated: false,
-    name: 'Viewer',
-    description: 'Viewer',
-		// interfaces: () => [nodeDefinitions.nodeInterface],
-    meta: {
-      category: 'TYPE',
-      fields: {}
-    },
-  };
-
-  _.forEach(models, (model) => {
-
-    if (!model.shared) {
-      return;
-    }
-
-    Viewer.meta.fields[_.lowerFirst(model.pluralModelName)] = {
-      generated: false,
-      meta: {
-        relation: true,
-        list: true,
-        args: connectionArgs,
-        type: model.modelName,
-      }
-    };
-  });
-
-  return Viewer;
-}
-
-/**
  * Generates a property definition for a model type
  * @param {*} model
  * @param {*} property
@@ -199,7 +162,7 @@ function mapRelation(rel, modelName, relName) {
       embed: rel.embed,
       type: rel.modelTo.modelName,
       args: Object.assign({
-        active: {
+        where: {
           generated: false,
           type: 'JSON'
         },
@@ -270,7 +233,6 @@ function getTypeDefs() {
  * building all models types & relationships
  */
 function generateTypeDefs(models) {
-  types.Viewer = generateViewer(models);
 
   _.forEach(models, (model) => {
     mapType(model);

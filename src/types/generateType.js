@@ -50,7 +50,7 @@ const processIdField = (name, type) => {
   }
 
   const idFieldName = models[name].getIdName();
-  const idField = _.find(type.fields, (f, i) => i === idFieldName);
+  const idField = _.find(type.meta.fields, (f, i) => i === idFieldName);
 
   if (_.isNil(idField)) {
     return;
@@ -61,7 +61,7 @@ const processIdField = (name, type) => {
     //   type.fields._id = _.clone(type.fields.id);
     // }
 
-    type.fields.id = idField;
+    type.meta.fields.id = idField;
   }
 
   if (idField) {

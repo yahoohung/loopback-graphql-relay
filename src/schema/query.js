@@ -57,7 +57,7 @@ module.exports = function(models) {
   return new GraphQLObjectType({
     name: 'Query',
     fields: {
-      // node: getType('node'),
+      node: getType('node'),
       viewer: generateViewer(models)
     }
   });

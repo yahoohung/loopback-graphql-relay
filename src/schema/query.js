@@ -4,10 +4,12 @@ const _ = require('lodash');
 
 const {
 	connectionArgs,
+  connectionFromPromisedArray
 } = require('graphql-relay');
 
 const { GraphQLObjectType } = require('graphql');
 const { getType, getConnection } = require('../types/type');
+const { findAll } = require('../db');
 
 /**
  * Generates Viewer query
@@ -37,7 +39,10 @@ function generateViewer(models) {
                 type: getType('JSON')
               },
             }, connectionArgs),
-            type: getConnection(model.modelName)
+            type: getConnection(model.modelName),
+            resolve: (obj, args, context) => {
+              return connectionFromPromisedArray(findAll(model, obj, args, context), args);
+            }
           };
         });
 

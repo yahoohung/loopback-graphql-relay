@@ -11,14 +11,11 @@ const {
 	globalIdField,
 	fromGlobalId,
 	nodeDefinitions: relayNodeDefinitions,
-	connectionArgs: relayConnectionArgs,
-	connectionDefinitions,
-	connectionFromPromisedArray
 } = require('graphql-relay');
 
 // const type = require('./type');
 let { getType, getConnection } = require('./type');
-const { getTypeDef, getTypeDefs, generateTypeDefs } = require('./generateTypeDefs');
+const { generateTypeDefs } = require('./generateTypeDefs');
 
 /**
  * Singleton Objects
@@ -72,7 +69,7 @@ const processIdField = (name, type) => {
 function generateFieldArgs(field) {
   const args = {};
 
-  _.forEach(field.meta.args, (arg, argName) => { 
+  _.forEach(field.meta.args, (arg, argName) => {
     // If doesnt have {generated: false} prop, then it is
     // already built. Hence return it as is.
     if (arg.generated !== false) {

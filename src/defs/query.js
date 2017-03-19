@@ -85,9 +85,11 @@ function generateViewer(models) {
  * Generates a property definition for a model type
  * @param {*} model
  * @param {*} property
+ * @param {*} modelName
  * @param {*} propertyName
+ * @param {*} isInputType
  */
-function mapProperty(model, property, modelName, propertyName) {
+function mapProperty(model, property, modelName, propertyName, isInputType = false) {
 
   // If property is deprecated, ignore it.
   if (property.deprecated) {
@@ -122,7 +124,7 @@ function mapProperty(model, property, modelName, propertyName) {
   }
 
   // Add resolver
-  currentProperty.resolve = (obj, args, context) => (_.isNil(obj[propertyName]) ? null : obj[fieldName]);
+  currentProperty.resolve = (obj, args, context) => (_.isNil(obj[propertyName]) ? null : obj[propertyName]);
 
   // See if this property is a scalar.
   let scalar = getScalar(propertyType.name);
@@ -149,7 +151,7 @@ function mapProperty(model, property, modelName, propertyName) {
 
   // If this property is another Model
   if (propertyType.name === 'ModelConstructor' && property.defaultFn !== 'now') {
-    currentProperty.meta.type = propertyType.modelName;
+    currentProperty.meta.type = (!isInputType) ? propertyType.modelName : `${propertyType.modelName}Input`;
     const union = propertyType.modelName.split('|');
 
     // type is a union
@@ -162,7 +164,7 @@ function mapProperty(model, property, modelName, propertyName) {
         values: toTypes(union)
       };
     } else if (propertyType.settings && propertyType.settings.anonymous && propertyType.definition) {
-      currentProperty.gqlType = typeName;
+      currentProperty.meta.type = typeName;
       types[typeName] = {
         generated: false,
         meta: {
@@ -213,7 +215,6 @@ function mapType(model) {
     generated: false,
     meta: {
       category: 'TYPE',
-      input: true,
       fields: {}
     }
   };
@@ -227,6 +228,27 @@ function mapType(model) {
   });
 }
 
+/**
+ * Generates a definition for a single model input type
+ * @param {*} model
+ */
+function mapInputType(model) {
+  const modelName = `${model.modelName}Input`;
+
+  types[modelName] = {
+    generated: false,
+    meta: {
+      category: 'TYPE',
+      input: true,
+      fields: {}
+    }
+  };
+
+  _.forEach(model.definition.properties, (property, key) => {
+    mapProperty(model, property, modelName, key, true);
+  });
+}
+
 function sharedRelations(model) {
   return _.pickBy(model.relations, rel => rel.modelTo && rel.modelTo.shared);
 }
@@ -237,7 +259,10 @@ function sharedRelations(model) {
 module.exports = function abstractTypes(models) {
   types.Viewer = generateViewer(models);
 
-  _.forEach(models, model => mapType(model));
+  _.forEach(models, (model) => {
+    mapType(model);
+    mapInputType(model);
+  });
 
   return types;
 };

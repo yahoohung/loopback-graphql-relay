@@ -44,6 +44,36 @@ const getConnection = (name) => {
 };
 
 /**
+ *
+ * @param {*} type
+ */
+const processIdField = (name, type) => {
+
+  if (!models[name] || !models[name].getIdName) {
+    return;
+  }
+
+  const idFieldName = models[name].getIdName();
+  const idField = _.find(type.fields, (f, i) => i === idFieldName);
+
+  if (_.isNil(idField)) {
+    return;
+  }
+
+  if (idFieldName !== 'id') {
+    // if (!_.isNil(type.fields.id)) {
+    //   type.fields._id = _.clone(type.fields.id);
+    // }
+
+    type.fields.id = idField;
+  }
+
+  if (idField) {
+    type.interfaces = [nodeDefinitions.nodeInterface];
+  }
+};
+
+/**
  * Dynamically generate type based on the definition in typeObjs
  * @param {*} name
  */
@@ -57,10 +87,7 @@ const generateType = (name) => {
 
     def.name = name;
 
-    const idField = _.find(def.fields, (f, i) => i === 'id');
-    if (idField) {
-      def.interfaces = [nodeDefinitions.nodeInterface];
-    }
+    processIdField(name, def);
 
     if (def.category === 'TYPE') {
 
@@ -78,9 +105,11 @@ const generateType = (name) => {
 
           fields[fieldName] = { fieldName };
 
-					// TODO: improve id check
           if (fieldName === 'id') {
-            fields[fieldName] = globalIdField(name);
+            fields.id = globalIdField(name, (o) => {
+              const idName = models[name].getIdName();
+              return o[idName];
+            });
             return;
           }
 
@@ -107,10 +136,6 @@ const generateType = (name) => {
           } else {
             fields[fieldName].resolve = field.resolver;
           }
-
-          // if (field.gqlType === 'node') {
-          //   fields[fieldName] = fields[fieldName].type;
-          // }
 
           fields[fieldName] = Object.assign(field, fields[fieldName]);
         });

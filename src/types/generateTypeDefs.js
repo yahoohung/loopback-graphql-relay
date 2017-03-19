@@ -87,7 +87,9 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
   }
 
   // Add resolver
-  currentProperty.resolve = (obj, args, context) => (_.isNil(obj[propertyName]) ? null : obj[propertyName]);
+  currentProperty.resolve = (obj, args, context) => {
+    return _.isNil(obj[propertyName]) ? null : obj[propertyName];
+  };
 
   // See if this property is a scalar.
   let scalar = getScalar(propertyType.name);

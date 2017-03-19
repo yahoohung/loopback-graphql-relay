@@ -106,8 +106,12 @@ function generateTypeFields(def) {
     // If it's an id field, make it a globalId
     if (fieldName === 'id') {
       fields.id = globalIdField(def.name, (o) => {
-        const idName = models[def.name].getIdName();
-        return o[idName];
+        try {
+          const idName = models[def.name].getIdName();
+          return o[idName];
+        } catch (e) {
+          return o.id;
+        }
       });
       return;
     }
@@ -123,20 +127,6 @@ function generateTypeFields(def) {
 
     // Field arguments
     field.args = generateFieldArgs(field);
-
-    // If no resolver available, add one
-    if (_.isNil(field.resolve)) {
-      field.resolve = (obj, args, context) => {
-
-        if (field.meta.relation) {
-          return connectionFromPromisedArray(findAll(models[field.meta.type], obj, args, context), args);
-        }
-
-        return _.isNil(obj[fieldName]) ? null : obj[fieldName];
-      };
-    } else {
-      field.resolve = field.resolve;
-    }
 
     fields[fieldName] = field;
   });

@@ -5,8 +5,8 @@ const GraphQLInputObjectType = require('graphql').GraphQLInputObjectType;
 const InputType = new GraphQLInputObjectType({
   name: 'GeoPointInput',
   fields: {
-    latitude: { type: new GraphQLNonNull(GraphQLFloat) },
-    longitude: { type: new GraphQLNonNull(GraphQLFloat) }
+    lat: { type: new GraphQLNonNull(GraphQLFloat) },
+    lng: { type: new GraphQLNonNull(GraphQLFloat) }
   }
 });
 

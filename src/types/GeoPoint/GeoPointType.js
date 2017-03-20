@@ -6,13 +6,13 @@ const Type = new GraphQLObjectType({
   name: 'GeoPoint',
   description: 'A location',
   fields: () => ({
-    latitude: {
+    lat: {
       type: new GraphQLNonNull(GraphQLFloat),
-      resolve: obj => obj.latitude
+      resolve: obj => obj.lat
     },
     longitude: {
-      type: new GraphQLNonNull(GraphQLFloat),
-      resolve: obj => obj.longitude
+      lng: new GraphQLNonNull(GraphQLFloat),
+      resolve: obj => obj.lng
     }
   })
 });

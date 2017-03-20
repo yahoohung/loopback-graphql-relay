@@ -1,13 +1,12 @@
-const GraphQLString = require('graphql').GraphQLString;
+const GraphQLFloat = require('graphql').GraphQLFloat;
 const GraphQLNonNull = require('graphql').GraphQLNonNull;
 const GraphQLInputObjectType = require('graphql').GraphQLInputObjectType;
 
 const InputType = new GraphQLInputObjectType({
-  name: 'FileInput',
+  name: 'GeoPointInput',
   fields: {
-    base64: { type: new GraphQLNonNull(GraphQLString) },
-    name: { type: new GraphQLNonNull(GraphQLString) },
-    type: { type: GraphQLString }
+    lat: { type: new GraphQLNonNull(GraphQLFloat) },
+    lng: { type: new GraphQLNonNull(GraphQLFloat) }
   }
 });
 

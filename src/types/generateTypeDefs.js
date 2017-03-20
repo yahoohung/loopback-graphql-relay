@@ -87,9 +87,7 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
   }
 
   // Add resolver
-  currentProperty.resolve = (obj, args, context) => {
-    return _.isNil(obj[propertyName]) ? null : obj[propertyName];
-  };
+  currentProperty.resolve = (obj, args, context) => (_.isNil(obj[propertyName]) ? null : obj[propertyName]);
 
   // See if this property is a scalar.
   let scalar = getScalar(propertyType.name);
@@ -137,12 +135,12 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
         name: typeName,
         meta: {
           category: 'TYPE',
-          input: true,
+          input: isInputType,
           fields: {}
         }
       }; // creating a new type
       _.forEach(propertyType.definition.properties, (p, key) => {
-        mapProperty(propertyType, p, typeName, key);
+        mapProperty(propertyType, p, typeName, key, isInputType);
       });
     }
   }

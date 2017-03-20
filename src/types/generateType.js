@@ -3,6 +3,7 @@ const _ = require('lodash');
 
 const {
 	GraphQLObjectType,
+  GraphQLInputObjectType,
 	GraphQLEnumType,
 	GraphQLList
 } = require('graphql');
@@ -101,7 +102,7 @@ function generateTypeFields(def) {
     delete field.generated;
 
     // If it's an id field, make it a globalId
-    if (fieldName === 'id') {
+    if (fieldName === 'id' && def.meta.input !== true) {
       fields.id = globalIdField(def.name, (o) => {
         try {
           const idName = models[def.name].getIdName();
@@ -155,6 +156,10 @@ function generateType(name, def) {
   if (def.meta.category === 'TYPE') {
 
     def.fields = () => generateTypeFields(def);
+
+    if (def.meta.input === true) {
+      return new GraphQLInputObjectType(def);
+    }
 
     return new GraphQLObjectType(def);
   } else if (def.category === 'ENUM') {

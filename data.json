@@ -8,7 +8,7 @@
     "Note": 18,
     "Author": 18,
     "Reader": 2,
-    "Book": 2,
+    "Book": 990,
     "Customer": 8,
     "Address": 1,
     "EmailAddress": 1,
@@ -75,7 +75,13 @@
       "1": "{\"name\":\"Reader 1\",\"id\":1}"
     },
     "Book": {
-      "1": "{\"name\":\"Book 1\",\"links\":[{\"id\":1,\"name\":\"Author 1\",\"notes\":\"Note 1\",\"linkedId\":1,\"linkedType\":\"Author\"},{\"id\":2,\"name\":\"Reader 1\",\"notes\":\"Note 2\",\"linkedId\":1,\"linkedType\":\"Reader\"}],\"id\":1}"
+      "1": "{\"name\":\"Book 1\",\"links\":[{\"id\":1,\"name\":\"Author 1\",\"notes\":\"Note 1\",\"linkedId\":1,\"linkedType\":\"Author\"},{\"id\":2,\"name\":\"Reader 1\",\"notes\":\"Note 2\",\"linkedId\":1,\"linkedType\":\"Reader\"}],\"id\":1}",
+      "2": "{\"links\":[],\"id\":2}",
+      "87": "{\"name\":\"test\",\"id\":87}",
+      "89": "{\"name\":\"test9\",\"id\":89}",
+      "123": "{\"name\":\"test\",\"id\":123}",
+      "456": "{\"name\":\"what\",\"id\":456}",
+      "987": "{\"name\":\"test\",\"id\":987}"
     },
     "Order": {
       "1": "{\"date\":\"2014-12-31T18:30:00.000Z\",\"description\":\"First order by Customer A\",\"customerId\":1,\"id\":1}",

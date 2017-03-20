@@ -78,7 +78,6 @@
       "1": "{\"name\":\"Book 1\",\"links\":[{\"id\":1,\"name\":\"Author 1\",\"notes\":\"Note 1\",\"linkedId\":1,\"linkedType\":\"Author\"},{\"id\":2,\"name\":\"Reader 1\",\"notes\":\"Note 2\",\"linkedId\":1,\"linkedType\":\"Reader\"}],\"id\":1}",
       "2": "{\"links\":[],\"id\":2}",
       "87": "{\"name\":\"test\",\"id\":87}",
-      "89": "{\"name\":\"test9\",\"id\":89}",
       "123": "{\"name\":\"test\",\"id\":123}",
       "456": "{\"name\":\"what\",\"id\":456}",
       "987": "{\"name\":\"test\",\"id\":987}"

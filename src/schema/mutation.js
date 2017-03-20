@@ -28,6 +28,7 @@ function saveAndDeleteMethods(models) {
     }
 
     const saveFieldName = `save${model.modelName}`;
+    const deleteFieldName = `delete${model.modelName}`;
     const InputModelName = `${model.modelName}Input`;
 
     fields[saveFieldName] = mutationWithClientMutationId({
@@ -44,6 +45,16 @@ function saveAndDeleteMethods(models) {
         },
       },
       mutateAndGetPayload: ({ obj }) => model.upsert(Object.assign({}, obj))
+    });
+
+    fields[deleteFieldName] = mutationWithClientMutationId({
+      name: deleteFieldName,
+      inputFields: {
+        obj: {
+          type: getType(InputModelName)
+        },
+      },
+      mutateAndGetPayload: ({ obj }) => model.findById(obj.id).then(instance => instance.destroy())
     });
   });
 

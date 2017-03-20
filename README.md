@@ -1,8 +1,8 @@
 
 ### Status
-[![Build Status](https://travis-ci.org/Tallyb/loopback-graphql.svg?branch=master)](https://travis-ci.org/Tallyb/loopback-graphql)
+[![Build Status](https://travis-ci.org/Tallyb/loopback-graphql.svg?branch=master)](https://travis-ci.org/BlueEastCode/loopback-graphql-relay)
 
-# GraphQL Server for Loopback (Apollo Server)
+# Relay GraphQL Server for Loopback (Apollo Server)
 
 Combine the powers of [ApolloStack](http://www.apollostack.com/) GraphQL with the backend of Loopback.
 <br>
@@ -39,7 +39,7 @@ Build the GraphQL queries and use them in your application.
 
 The following actions are supported: 
 ###  Queries
-* Single entity by ID
+* Node query to fetch single entity by ID
 * Multiple entities with pagination (first, after)
 * Relationship between entities (belongs to, has many)
 
@@ -47,5 +47,8 @@ The following actions are supported:
 * Save single object
 * Delete single object 
 
+## Inspiration
+This repository originally started as a fork of the [loopback-graphql](https://github.com/Tallyb/loopback-graphql) project by [Tallyb](https://github.com/Tallyb). But due to considerable change in the way query end points are created, this repository is maitained as an independant project.
+
 ## Roadmap
-[See here the Github project](https://github.com/Tallyb/loopback-graphql/projects/1)
+[See here the Github project](https://github.com/BlueEastCode/loopback-graphql-relay/projects)

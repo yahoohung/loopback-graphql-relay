@@ -35,7 +35,7 @@
     "REST",
     "APIs"
   ],
-  "author": "Tally Barak <tally.barak@gmail.com>",
+  "author": "Abdul Rehman Talat <rehman.talat@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/BlueEastCode/loopback-graphql-relay/issues"

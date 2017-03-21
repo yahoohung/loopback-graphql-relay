@@ -6,6 +6,8 @@
 
 Combine the powers of [ApolloStack](http://www.apollostack.com/) GraphQL with the backend of Loopback.
 <br>
+Uses [graphql-js](https://github.com/graphql/graphql-js) and [graphql-relay-js](https://github.com/graphql/graphql-relay-js) to compile schema.
+<br>
 All of Loopback models are exposed as GraphQL Queries.
 <br>
 Define models in Loopback to be exposed as REST APIs and GraphQL queries and mutations *.

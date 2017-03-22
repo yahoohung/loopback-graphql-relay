@@ -13,7 +13,10 @@ module.exports = function(app, options) {
 
   app.use(path, bodyParser.json(), graphql.graphqlExpress(req => ({
     schema,
-    context: req
+    context: {
+      app,
+      req
+    }
   })));
   app.use(graphiqlPath, graphql.graphiqlExpress({
     endpointURL: path

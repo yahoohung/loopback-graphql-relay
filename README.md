@@ -19,12 +19,12 @@ Use the Apollo [clients](http://dev.apollodata.com/) to access your data.
 ## Getting started
 
 ```sh
-npm install loopback-graphql
+npm install loopback-graphql-relay
 ```
-Add the loopback-graphql component to the `server/component-config.json`: 
+Add the loopback-graphql-relay component to the `server/component-config.json`: 
 
 ```
-"loopback-graphql": {
+"loopback-graphql-relay": {
     "path": "/graphql",
     "graphiqlPath":"/graphiql"
   }

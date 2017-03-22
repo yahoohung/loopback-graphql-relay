@@ -245,5 +245,6 @@ function generateTypeDefs(models) {
 module.exports = {
   getTypeDef,
   getTypeDefs,
-  generateTypeDefs
+  generateTypeDefs,
+  SCALARS
 };

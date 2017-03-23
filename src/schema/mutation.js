@@ -79,7 +79,7 @@ function addRemoteHooks(model) {
       if (method.name.indexOf('Stream') === -1 && method.name.indexOf('invoke') === -1) {
 
         const acceptingParams = {};
-        let returnTypeName = 'obj';
+        let returnTypeName = 'data';
         let returnType = 'JSON';
 
         method.accepts.forEach((param) => {
@@ -98,6 +98,11 @@ function addRemoteHooks(model) {
           }
         });
         if (method.returns && method.returns[0]) {
+
+          if (method.returns[0].arg) {
+            returnTypeName = method.returns[0].arg;
+          }
+
           if (!SCALARS[method.returns[0].type] && typeof method.returns[0].type !== 'object') {
             returnType = `${method.returns[0].type}`;
           } else {
@@ -122,16 +127,17 @@ function addRemoteHooks(model) {
         const hookName = `${method.name}${model.modelName}`;
         const type = getType(`${exchangeTypes[returnType] || returnType}`) || getType('JSON');
 
+        const outputFields = {};
+        outputFields[`${returnTypeName}`] = {
+          type,
+          resolve: o => o.obj
+        };
+
         hooks[hookName] = mutationWithClientMutationId({
           name: hookName,
           meta: { relation: true },
           inputFields: acceptingParams,
-          outputFields: {
-            obj: {
-              type,
-              resolve: o => o.obj
-            },
-          },
+          outputFields,
           mutateAndGetPayload: (args) => {
             const params = [];
 

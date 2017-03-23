@@ -71,9 +71,15 @@ function addRemoteHooks(model) {
 
   if (model.sharedClass && model.sharedClass.methods) {
     model.sharedClass.methods().forEach((method) => {
+
+      if (!method.shared) {
+        return;
+      }
+
       if (method.name.indexOf('Stream') === -1 && method.name.indexOf('invoke') === -1) {
 
         const acceptingParams = {};
+        let returnTypeName = 'obj';
         let returnType = 'JSON';
 
         method.accepts.forEach((param) => {
@@ -96,8 +102,19 @@ function addRemoteHooks(model) {
             returnType = `${method.returns[0].type}`;
           } else {
             returnType = `${_.upperFirst(method.returns[0].type)}`;
-            if (typeof method.returns[0].type === 'object') {
-              returnType = 'JSON';
+            if (_.isArray(method.returns[0].type)) {
+              returnType = method.returns[0].type[0];
+            } else if (typeof method.returns[0].type === 'object') {
+
+              const keys = _.keys(method.returns[0].type);
+              const values = _.values(method.returns[0].type);
+
+              if (values[0].type && typeof values[0].type === 'string') {
+                returnType = values[0].type;
+                returnTypeName = keys[0];
+              } else {
+                returnType = 'JSON';
+              }
             }
           }
         }

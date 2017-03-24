@@ -1,9 +1,12 @@
-const GraphQLInputObjectType = require('graphql').GraphQLInputObjectType;
-const GraphQLNonNull = require('graphql').GraphQLNonNull;
-const GraphQLObjectType = require('graphql').GraphQLObjectType;
-const GraphQLString = require('graphql').GraphQLString;
-const GraphQLBoolean = require('graphql').GraphQLBoolean;
-const GraphQLInt = require('graphql').GraphQLInt;
+const _ = require('lodash');
+
+const {
+  GraphQLInputObjectType,
+  GraphQLNonNull,
+  GraphQLObjectType
+} = require('graphql');
+
+const { getType } = require('../../types/type');
 
 function resolveMaybeThunk(maybeThunk) {
   return typeof maybeThunk === 'function' ? maybeThunk() : maybeThunk;
@@ -15,28 +18,34 @@ function defaultGetPayload(obj) {
 
 module.exports = function subscriptionWithPayload({
   name,
-  inputFields,
-  outputFields,
+  model,
   subscribeAndGetPayload = defaultGetPayload
 }) {
   const inputType = new GraphQLInputObjectType({
-    name: `${name}Input`,
+    name: `${name}SubscriptionInput`,
     fields: () => Object.assign({},
-			resolveMaybeThunk(inputFields),
-			{ create: { type: GraphQLBoolean } },
-			{ update: { type: GraphQLBoolean } },
-			{ enter: { type: GraphQLBoolean } },
-			{ leave: { type: GraphQLBoolean } },
-			{ delete: { type: GraphQLBoolean } }
+			// resolveMaybeThunk(inputFields),
+      { options: { type: getType('JSON') } },
+			{ create: { type: getType('Boolean') } },
+			{ update: { type: getType('Boolean') } },
+			{ remove: { type: getType('Boolean') } }
     )
   });
 
+  const outputFields = {};
+  outputFields[`${_.lowerCase(model.modelName)}`] = {
+    type: getType(model.modelName),
+    resolve: o => o
+  };
+
   const outputType = new GraphQLObjectType({
-    name: `${name}Payload`,
+    name: `${name}SubscriptionPayload`,
     fields: () => Object.assign({},
 			resolveMaybeThunk(outputFields),
-			{ event: { type: GraphQLString } },
-			{ clientSubscriptionId: { type: GraphQLInt } }
+			{ where: { type: getType('JSON') } },
+			{ type: { type: getType('String') } },
+      { target: { type: getType('String') } },
+			{ clientSubscriptionId: { type: getType('Int') } }
     )
   });
 

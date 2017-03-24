@@ -41,12 +41,6 @@ function getOptions(model, args) {
     remove: (!_.isNil(args.input.remove)) ? args.input.remove : false,
   };
 
-  // const Object = Parse.Object.extend(modelName);
-  // const query = new Parse.Query(Object);
-
-  // convertObjToQuery(modelName, args.input, query);
-
-  // basicOpts.Query = query;
   basicOpts.model = model;
 
   return basicOpts;

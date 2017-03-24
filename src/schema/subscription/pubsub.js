@@ -34,7 +34,7 @@ class PubSub {
     const stream = model.createChangeStream((err, stream) => {
       // changes.pipe(es.stringify()).pipe(process.stdout);
 
-      // Listeners      
+      // Listeners
       stream.on('data', (data) => {
 
         switch (data.type) {
@@ -60,10 +60,10 @@ class PubSub {
             break;
         }
       });
-      
+
       stream.on('end', () => this.unsubscribe(subId));
       stream.on('error', () => this.unsubscribe(subId));
-    
+
       this.subscriptions[subId] = [stream, onMessage];
     });
 
@@ -72,7 +72,7 @@ class PubSub {
   }
 
   unsubscribe(subId) {
-    this.subscriptions[subId][0].unsubscribe();
+    this.subscriptions[subId][0].destroy();
     delete this.subscriptions[subId];
   }
 

@@ -28,10 +28,6 @@ const exchangeTypes = {
 function saveAndDeleteMethods(model) {
   const fields = {};
 
-  if (!model.shared) {
-    return;
-  }
-
   const saveFieldName = `save${model.modelName}`;
   const deleteFieldName = `delete${model.modelName}`;
   const InputModelName = `${model.modelName}Input`;
@@ -159,6 +155,11 @@ module.exports = function(models) {
 
   const fields = {};
   _.forEach(models, (model) => {
+
+    if (!model.shared) {
+      return;
+    }
+
     Object.assign(
       fields,
       saveAndDeleteMethods(model),

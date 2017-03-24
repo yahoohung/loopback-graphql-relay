@@ -13,7 +13,7 @@ function resolveMaybeThunk(maybeThunk) {
 }
 
 function defaultGetPayload(obj) {
-  return obj;
+  return (obj.data) ? obj.data.toJSON() : null;
 }
 
 module.exports = function subscriptionWithPayload({
@@ -57,7 +57,12 @@ module.exports = function subscriptionWithPayload({
 
     resolve(obj, { input }, context, info) {
       return Promise.resolve(subscribeAndGetPayload(obj.object, { input }, context, info))
-				.then(payload => ({ clientSubscriptionId: obj.subscriptionId, event: obj.event, object: payload })
+				.then(payload => ({
+          clientSubscriptionId: obj.subscriptionId,
+          where: obj.object.where,
+          type: obj.object.type,
+          target: obj.object.target,
+          object: payload })
 				);
     }
   };

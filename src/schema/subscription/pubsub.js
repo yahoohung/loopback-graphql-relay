@@ -16,47 +16,58 @@ class PubSub {
 
   subscribe(triggerName, onMessage, options) {
 
+    const me = this;
+
     // Subscription ID
     const subId = this.subIdCounter = this.subIdCounter + 1;
 
     // Check Type
-    const { type } = options;
+    const { model } = options;
 
-    if (_.isNil(type)) {
-      return Promise.reject(new Error('No object type'));
+    if (_.isNil(model)) {
+      return Promise.reject(new Error('No related model found for this subscription'));
     }
 
-    // Parse Query
-    const query = options.Query;
-    const subscription = query.subscribe();
+    const { create, update, remove: rmv } = options;
 
-    // Listeners
-    const { create, update, enter, leave, delete: del } = options;
+    // Stream
+    const stream = model.createChangeStream((err, stream) => {
+      // changes.pipe(es.stringify()).pipe(process.stdout);
 
-    if (create) {
-      subscription.addListener('create', o => this.onUpdateMessage(subId, 'create', o));
-    }
+      // Listeners      
+      stream.on('data', (data) => {
 
-    if (update) {
-      subscription.addListener('update', o => this.onUpdateMessage(subId, 'update', o));
-    }
+        switch (data.type) {
+          case 'create':
+            if (create) {
+              me.onUpdateMessage(subId, 'create', data);
+            }
+            break;
 
-    if (enter) {
-      subscription.addListener('enter', o => this.onUpdateMessage(subId, 'enter', o));
-    }
+          case 'update':
+            if (update) {
+              me.onUpdateMessage(subId, 'update', data);
+            }
+            break;
 
-    if (leave) {
-      subscription.addListener('leave', o => this.onUpdateMessage(subId, 'leave', o));
-    }
+          case 'remove':
+            if (rmv) {
+              me.onUpdateMessage(subId, 'remove', data);
+            }
+            break;
 
-    if (del) {
-      subscription.addListener('delete', o => this.onUpdateMessage(subId, 'delete', o));
-    }
-
-    subscription.on('close', () => this.unsubscribe(subId));
+          default:
+            break;
+        }
+      });
+      
+      stream.on('end', () => this.unsubscribe(subId));
+      stream.on('error', () => this.unsubscribe(subId));
+    
+      this.subscriptions[subId] = [stream, onMessage];
+    });
 
     // Packup
-    this.subscriptions[subId] = [subscription, onMessage];
     return Promise.resolve(subId);
   }
 

@@ -8,7 +8,7 @@ const startSubscriptionServer = require('./subscriptions');
 
 module.exports = function(app, options) {
   const models = app.models();
-  const schema = getSchema(models);
+  const schema = getSchema(models, options);
 
   const graphiqlPath = options.graphiqlPath || '/graphiql';
   const path = options.path || '/graphql';
@@ -20,6 +20,7 @@ module.exports = function(app, options) {
       req
     }
   })));
+
   app.use(graphiqlPath, graphql.graphiqlExpress({
     endpointURL: path
   }));

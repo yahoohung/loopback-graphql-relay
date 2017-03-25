@@ -43,5 +43,5 @@ module.exports = function startSubscriptionServer(models, schema, options) {
   const subscriptionManager = SubscriptionManager(models, schema, new PubSub());
   SubscriptionServer(subscriptionManager, options);
 
-  test(subscriptionManager);
+  // test(subscriptionManager);
 };

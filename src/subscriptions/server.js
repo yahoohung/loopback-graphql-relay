@@ -21,8 +21,9 @@ module.exports = function(subscriptionManager, opts) {
 
   const server = new SubscriptionServer(
       Object.assign({}, {
-        // onConnect: (connectionParams) => {
+        // onConnect: ({ accessToken }) => {
         //   // Implement if you need to handle and manage connection
+        // TODO: Implement authentication, reference blog: https://dev-blog.apollodata.com/new-release-of-graphql-subscriptions-for-javascript-f11be19e6569#.l1yh2y1x1
         // },
         subscriptionManager
       }, options),

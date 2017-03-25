@@ -2,18 +2,24 @@ const { createServer } = require('http');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 
 
-const websocketServer = createServer((request, response) => {
-  response.writeHead(404);
-  response.end();
-});
-
 module.exports = function(subscriptionManager, opts) {
 
   const subscriptionOpts = opts.subscriptionServer || {};
 
+  const disable = subscriptionOpts.disable || false;
+
+  if (disable === true) {
+    return;
+  }
+
   const WS_PORT = subscriptionOpts.port || 5000;
   const options = subscriptionOpts.options || {};
   const socketOptions = subscriptionOpts.socketOptions || {};
+
+  const websocketServer = createServer((request, response) => {
+    response.writeHead(404);
+    response.end();
+  });
 
   websocketServer.listen(WS_PORT, () => console.log(
     `Websocket Server is now running on http://localhost:${WS_PORT}`

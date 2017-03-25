@@ -2,5 +2,14 @@
   "loopback-component-explorer": {
     "mountPath": "/explorer"
   },
-  "../index": {}
+  "../index": {
+    "path": "/graphql",
+    "graphiqlPath": "/graphiql",
+    "subscriptionServer": {
+      "disable": false,
+      "port": 5000,
+      "options": {},
+      "socketOptions": {}
+    }
+  }
 }

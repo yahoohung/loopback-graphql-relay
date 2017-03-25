@@ -6,7 +6,7 @@ const {
   GraphQLObjectType
 } = require('graphql');
 
-const { getType } = require('../../types/type');
+const { getType } = require('../types/type');
 
 function resolveMaybeThunk(maybeThunk) {
   return typeof maybeThunk === 'function' ? maybeThunk() : maybeThunk;

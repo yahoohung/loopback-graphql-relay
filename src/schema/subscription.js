@@ -5,7 +5,7 @@ const _ = require('lodash');
 const { GraphQLObjectType } = require('graphql');
 
 const { getType } = require('../types/type');
-const subscriptionWithPayload = require('./subscription/subscriptionWithPayload');
+const subscriptionWithPayload = require('../subscriptions/subscriptionWithPayload');
 
 /**
  * Create basic save and delete methods for all shared models

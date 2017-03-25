@@ -17,6 +17,7 @@ function test(subscriptionManager) {
           create: $create 
           update: $update 
           remove: $remove
+          clientSubscriptionId: 85
         }) {
           author {
             id first_name last_name
@@ -41,4 +42,6 @@ function test(subscriptionManager) {
 module.exports = function startSubscriptionServer(models, schema, options) {
   const subscriptionManager = SubscriptionManager(models, schema, new PubSub());
   SubscriptionServer(subscriptionManager, options);
+
+  test(subscriptionManager);
 };

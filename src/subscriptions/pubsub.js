@@ -19,7 +19,7 @@ class PubSub {
     const me = this;
 
     // Subscription ID
-    const subId = this.subIdCounter = this.subIdCounter + 1;
+    const subId = this.getSubscriptionId(options.clientSubscriptionId || _.random(1, 99999));
 
     // Check Type
     const { model } = options;
@@ -31,7 +31,7 @@ class PubSub {
     const { create, update, remove: rmv } = options;
 
     // Stream
-    const stream = model.createChangeStream((err, stream) => {
+    model.createChangeStream((err, stream) => {
       // changes.pipe(es.stringify()).pipe(process.stdout);
 
       // Listeners
@@ -74,6 +74,14 @@ class PubSub {
   unsubscribe(subId) {
     this.subscriptions[subId][0].destroy();
     delete this.subscriptions[subId];
+  }
+
+  getSubscriptionId(id) {
+    if (!this.subscriptions[id]) {
+      return id;
+    }
+
+    return this.getSubscriptionId(id + 1);
   }
 
   onMessage(subId, event, object) {

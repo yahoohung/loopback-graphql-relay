@@ -13,7 +13,7 @@ function resolveMaybeThunk(maybeThunk) {
 }
 
 function defaultGetPayload(obj) {
-  return (obj.data) ? obj.data.toJSON() : null;
+  return (obj && obj.data) ? obj.data.toJSON() : null;
 }
 
 module.exports = function subscriptionWithPayload({
@@ -28,14 +28,15 @@ module.exports = function subscriptionWithPayload({
       { options: { type: getType('JSON') } },
 			{ create: { type: getType('Boolean') } },
 			{ update: { type: getType('Boolean') } },
-			{ remove: { type: getType('Boolean') } }
+			{ remove: { type: getType('Boolean') } },
+			{ clientSubscriptionId: { type: getType('Int') } }
     )
   });
 
   const outputFields = {};
   outputFields[`${_.lowerCase(model.modelName)}`] = {
     type: getType(model.modelName),
-    resolve: o => o
+    resolve: o => o.object
   };
 
   const outputType = new GraphQLObjectType({
@@ -56,14 +57,16 @@ module.exports = function subscriptionWithPayload({
     },
 
     resolve(obj, { input }, context, info) {
-      return Promise.resolve(subscribeAndGetPayload(obj.object, { input }, context, info))
-				.then(payload => ({
-          clientSubscriptionId: obj.subscriptionId,
-          where: obj.object.where,
-          type: obj.object.type,
-          target: obj.object.target,
-          object: payload })
-				);
+
+      const clientSubscriptionId = (obj) ? obj.subscriptionId : null;
+      const object = (obj) ? obj.object : null;
+
+      const where = (obj) ? obj.object.where : null;
+      const type = (obj) ? obj.object.type : null;
+      const target = (obj) ? obj.object.target : null;
+
+      return Promise.resolve(subscribeAndGetPayload(object, { input }, context, info))
+				.then(payload => ({ clientSubscriptionId, where, type, target, object: payload }));
     }
   };
 };

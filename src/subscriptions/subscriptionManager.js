@@ -39,6 +39,8 @@ function getOptions(model, args) {
     create: (!_.isNil(args.input.create)) ? args.input.create : false,
     update: (!_.isNil(args.input.update)) ? args.input.update : false,
     remove: (!_.isNil(args.input.remove)) ? args.input.remove : false,
+    options: (!_.isNil(args.input.options)) ? args.input.options : false,
+    clientSubscriptionId: (!_.isNil(args.input.clientSubscriptionId)) ? args.input.clientSubscriptionId : false,
   };
 
   basicOpts.model = model;

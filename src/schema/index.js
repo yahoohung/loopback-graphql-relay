@@ -6,15 +6,19 @@ const getMutation = require('./mutation');
 const getSubscription = require('./subscription');
 const getTypes = require('../types');
 
-function getSchema(models) {
+function getSchema(models, options) {
 
   getTypes(models);
 
-  return new GraphQLSchema({
+  const items = {
     query: getQuery(models),
     mutation: getMutation(models),
-    subscription: getSubscription(models),
-  });
+  };
+
+  if (options && options.subscriptionServer && options.subscriptionServer.disable !== true) {
+    items.subscription = getSubscription(models);
+  }
+  return new GraphQLSchema(items);
 }
 
 module.exports = {

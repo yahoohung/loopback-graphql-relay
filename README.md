@@ -28,6 +28,7 @@ Add the loopback-graphql-relay component to the `server/component-config.json`:
     "path": "/graphql",
     "graphiqlPath": "/graphiql",
     "subscriptionServer": {
+      "disable": false,
       "port": 5000,
       "options": {},
       "socketOptions": {}

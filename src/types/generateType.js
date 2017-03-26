@@ -79,7 +79,7 @@ function generateFieldArgs(field) {
       return;
     }
 
-    args[argName] = { type: getType(arg.type) };
+    args[argName] = { type: (arg.required === true) ? new GraphQLNonNull(getType(arg.type)) : getType(arg.type) };
   });
 
   return args;

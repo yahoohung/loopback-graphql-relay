@@ -3,7 +3,8 @@
 const loopback = require('loopback');
 const boot = require('loopback-boot');
 
-const app = module.exports = loopback();
+const app = loopback();
+module.exports = app;
 
 app.use(loopback.token({
   model: app.models.accessToken,
@@ -17,9 +18,9 @@ app.start = function() {
     const baseUrl = app.get('url').replace(/\/$/, '');
     console.log('Web server listening at: %s', baseUrl);
     if (app.get('loopback-component-explorer')) {
-        const explorerPath = app.get('loopback-component-explorer').mountPath;
-        console.log('Browse your REST API at %s%s', baseUrl, explorerPath);
-      }
+      const explorerPath = app.get('loopback-component-explorer').mountPath;
+      console.log('Browse your REST API at %s%s', baseUrl, explorerPath);
+    }
   });
 };
 

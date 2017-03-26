@@ -1,11 +1,12 @@
 'use strict';
-var server = require('../server/server');
-var expect = require('chai').expect;
+
+const server = require('../server/server');
+const expect = require('chai').expect;
 describe('model testing', () => {
-    it.skip('should return models', (done) => {
-        server.on('started', function() {
-            expect(server).not.to.be.empty;
-            done();
-        });
+  it.skip('should return models', (done) => {
+    server.on('started', () => {
+      expect(server).not.to.be.empty;
+      done();
     });
+  });
 });

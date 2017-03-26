@@ -121,7 +121,7 @@ function generateTypeFields(def) {
       // field.type = getConnection(field.meta.type);
       field.type = new GraphQLList(getType(field.meta.type));
     } else {
-      field.type = (field.meta.required === true) ? new GraphQLNonNull(getType(field.meta.type)) : getType(field.meta.type);      
+      field.type = (field.meta.required === true) ? new GraphQLNonNull(getType(field.meta.type)) : getType(field.meta.type);
     }
 
     // Field arguments

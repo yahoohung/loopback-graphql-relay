@@ -11,6 +11,10 @@
             "type": "string",
             "description": "contains a unique stable identifier denoting this place. This identifier may not be used to retrieve information about this place, but is guaranteed to be valid across sessions. It can be used to consolidate data about this place, and to verify the identity of a place across separate searches. **Note**: The `id` is now deprecated in favor of `place_id`."
         },
+        "location": {
+            "type": "geopoint",
+            "description": "Contain coordinates"
+        },
         "geometry": {
             "type": {
                 "location": {

@@ -4,17 +4,16 @@ const GraphQLNonNull = require('graphql').GraphQLNonNull;
 
 const Type = new GraphQLObjectType({
   name: 'GeoPoint',
-  description: 'A location',
-  fields: () => ({
+  fields: {
     lat: {
       type: new GraphQLNonNull(GraphQLFloat),
       resolve: obj => obj.lat
     },
-    longitude: {
+    lng: {
       lng: new GraphQLNonNull(GraphQLFloat),
       resolve: obj => obj.lng
     }
-  })
+  }
 });
 
 module.exports = Type;

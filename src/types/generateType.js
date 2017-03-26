@@ -5,7 +5,8 @@ const {
 	GraphQLObjectType,
   GraphQLInputObjectType,
 	GraphQLEnumType,
-	GraphQLList
+	GraphQLList,
+  GraphQLNonNull
 } = require('graphql');
 
 const {
@@ -120,7 +121,7 @@ function generateTypeFields(def) {
       // field.type = getConnection(field.meta.type);
       field.type = new GraphQLList(getType(field.meta.type));
     } else {
-      field.type = getType(field.meta.type);
+      field.type = (field.meta.required === true) ? new GraphQLNonNull(getType(field.meta.type)) : getType(field.meta.type);      
     }
 
     // Field arguments

@@ -5,6 +5,7 @@ const {
 	connectionFromPromisedArray
 } = require('graphql-relay');
 
+const GeoPointTypeDefs = require('./GeoPoint');
 const { findRelated } = require('../db');
 
 /** * Loopback Types - GraphQL types
@@ -20,7 +21,7 @@ const { findRelated } = require('../db');
         String - string
     ***/
 
-const types = {};
+let types = {};
 
 const SCALARS = {
   any: 'JSON',
@@ -72,6 +73,9 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
   const typeName = `${modelName}_${propertyName}`;
   let propertyType = property.type;
 
+  // Add resolver
+  currentProperty.resolve = (obj, args, context) => (_.isNil(obj[propertyName]) ? null : obj[propertyName]);
+
   // If it's an Array type, map it to JSON Scalar
   if (propertyType.name === 'Array') { // JSON Array
     currentProperty.meta.list = true;
@@ -80,14 +84,17 @@ function mapProperty(model, property, modelName, propertyName, isInputType = fal
     return;
   }
 
+  // If it's an Array type, map it to JSON Scalar
+  if (propertyType.name === 'GeoPoint') { // JSON Array
+    currentProperty.meta.type = (isInputType) ? 'GeoPointInput' : 'GeoPoint';
+    return;
+  }
+
   // If property.type is an array, its a list type.
   if (_.isArray(property.type)) {
     currentProperty.meta.list = true;
     propertyType = property.type[0];
   }
-
-  // Add resolver
-  currentProperty.resolve = (obj, args, context) => (_.isNil(obj[propertyName]) ? null : obj[propertyName]);
 
   // See if this property is a scalar.
   let scalar = getScalar(propertyType.name);
@@ -229,10 +236,15 @@ function getTypeDefs() {
   return types;
 }
 
+function getCustomTypeDefs() {
+  return GeoPointTypeDefs;
+}
 /**
  * building all models types & relationships
  */
 function generateTypeDefs(models) {
+
+  types = Object.assign({}, types, getCustomTypeDefs());
 
   _.forEach(models, (model) => {
     mapType(model);

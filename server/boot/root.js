@@ -2,65 +2,66 @@
 // Node module: loopback-example-relations
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
+
 'use strict';
 
 module.exports = function(app) {
-    var router = app.loopback.Router();
-    router.get('/', function(req, res, next) {
-        app.models.Customer.findOne({
-            where: {
-                name: 'Customer A'
-            }
-        }, function(err, customer) {
-            if (err) {
-                return next(err);
-            }
-            return res.render('index', {
-                customer: customer
-            });
-        });
+  const router = app.loopback.Router();
+  router.get('/', (req, res, next) => {
+    app.models.Customer.findOne({
+      where: {
+        name: 'Customer A'
+      }
+    }, (err, customer) => {
+      if (err) {
+        return next(err);
+      }
+      return res.render('index', {
+        customer
+      });
     });
-    router.get('/email', function(req, res, next) {
-        app.models.Customer.findOne({
-            where: {
-                name: 'Larry Smith'
-            }
-        }, function(err, customer) {
-            if (err) {
-                return next(err);
-            }
-            return res.render('email', {
-                customer: customer
-            });
-        });
+  });
+  router.get('/email', (req, res, next) => {
+    app.models.Customer.findOne({
+      where: {
+        name: 'Larry Smith'
+      }
+    }, (err, customer) => {
+      if (err) {
+        return next(err);
+      }
+      return res.render('email', {
+        customer
+      });
     });
-    router.get('/address', function(req, res, next) {
-        app.models.Customer.findOne({
-            where: {
-                name: 'John Smith'
-            }
-        }, function(err, customer) {
-            if (err) {
-                return next(err);
-            }
-            return res.render('address', {
-                customer: customer
-            });
-        });
+  });
+  router.get('/address', (req, res, next) => {
+    app.models.Customer.findOne({
+      where: {
+        name: 'John Smith'
+      }
+    }, (err, customer) => {
+      if (err) {
+        return next(err);
+      }
+      return res.render('address', {
+        customer
+      });
     });
-    router.get('/account', function(req, res, next) {
-        app.models.Customer.findOne({
-            where: {
-                name: 'Mary Smith'
-            }
-        }, function(err, customer) {
-            if (err) {
-                return next(err);
-            }
-            return res.render('account', {
-                customer: customer
-            });
-        });
+  });
+  router.get('/account', (req, res, next) => {
+    app.models.Customer.findOne({
+      where: {
+        name: 'Mary Smith'
+      }
+    }, (err, customer) => {
+      if (err) {
+        return next(err);
+      }
+      return res.render('account', {
+        customer
+      });
     });
-    app.use(router);
+  });
+  app.use(router);
 };

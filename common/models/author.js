@@ -2,35 +2,35 @@
 
 module.exports = function(Author) {
 
-    Author.remoteMethod(
+  Author.remoteMethod(
         'addFriend', {
-            'http': {
-                'path': '/addFriend',
-                'verb': 'post'
-            },
+          http: {
+            path: '/addFriend',
+            verb: 'post'
+          },
 
-            'accepts': [{
-                'arg': 'author',
-                'type': 'number'
-            }, {
-                'arg': 'friend',
-                'type': ['number']
-            }],
+          accepts: [{
+            arg: 'author',
+            type: 'number'
+          }, {
+            arg: 'friend',
+            type: ['number']
+          }],
 
-            'returns': {
-                'arg': 'result',
-                'type': 'object'
-            }
+          returns: {
+            arg: 'result',
+            type: 'object'
+          }
         }
     );
 
-    Author.addFriend = function(author, friend) {
+  Author.addFriend = function(author, friend) {
 
-        return Author.findById(author)
-            .then(res => {
-                let updated = res;
-                updated.friendIds.push(friend);
-                return updated.save();
-            }).then(res => {});
-    };
+    return Author.findById(author)
+            .then((res) => {
+              const updated = res;
+              updated.friendIds.push(friend);
+              return updated.save();
+            }).then((res) => {});
+  };
 };

@@ -13,7 +13,8 @@
     "Address": 1,
     "EmailAddress": 1,
     "Account": 3,
-    "Order": 6
+    "Order": 6,
+    "Googlemaps": 2
   },
   "models": {
     "User": {
@@ -103,6 +104,9 @@
     "Account": {
       "1": "{\"name\":\"Checking\",\"balance\":5000,\"id\":1}",
       "2": "{\"name\":\"Saving\",\"balance\":2000,\"id\":2}"
+    },
+    "Googlemaps": {
+      "1": "{\"location\":{\"lat\":10,\"lng\":10},\"undefined\":1}"
     }
   }
 }

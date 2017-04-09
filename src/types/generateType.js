@@ -116,7 +116,7 @@ function generateTypeFields(def) {
     }
 
     if (field.meta.relation === true) {
-      field.type = getConnection(field.meta.type);
+      field.type = (field.meta.isMany === true) ? getConnection(field.meta.type) : getType(field.meta.type);
     } else if (field.meta.list) {
       // field.type = getConnection(field.meta.type);
       field.type = new GraphQLList(getType(field.meta.type));

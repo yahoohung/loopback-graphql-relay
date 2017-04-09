@@ -39,7 +39,7 @@ function findAll(model, obj, args, context) {
   return getList(model, obj, args);
 }
 
-function findRelated(rel, obj, args, context) {
+function findRelatedMany(rel, obj, args, context) {
   if (_.isArray(obj[rel.keyFrom])) {
     return Promise.resolve([]);
   }
@@ -47,11 +47,21 @@ function findRelated(rel, obj, args, context) {
     [rel.keyTo]: obj[rel.keyFrom]
   };
   return findAll(rel.modelTo, obj, args, context);
+}
 
+function findRelatedOne(rel, obj, args, context) {
+  if (_.isArray(obj[rel.keyFrom])) {
+    return Promise.resolve([]);
+  }
+  args.where = {
+    [rel.keyTo]: obj[rel.keyFrom]
+  };
+  return findOne(rel.modelTo, obj, args, context);
 }
 
 module.exports = {
   findAll,
   findOne,
-  findRelated
+  findRelatedMany,
+  findRelatedOne
 };

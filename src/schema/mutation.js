@@ -32,8 +32,8 @@ function saveAndDeleteMethods(model) {
     return;
   }
 
-  const saveFieldName = `save${model.modelName}`;
-  const deleteFieldName = `delete${model.modelName}`;
+  const saveFieldName = `${_.lowerFirst(model.modelName)}Save`;
+  const deleteFieldName = `${_.lowerFirst(model.modelName)}Delete`;
   const InputModelName = `${model.modelName}Input`;
 
   fields[saveFieldName] = mutationWithClientMutationId({
@@ -65,13 +65,19 @@ function saveAndDeleteMethods(model) {
   return fields;
 }
 
-function addRemoteHooks(model) {
+function addRemoteHooks(model, allowedVerbs) {
 
   const hooks = {};
 
   if (model.sharedClass && model.sharedClass.methods) {
     model.sharedClass.methods().forEach((method) => {
       if (method.name.indexOf('Stream') === -1 && method.name.indexOf('invoke') === -1) {
+
+        const verb = method.http.verb;
+
+        if (allowedVerbs && !_.includes(allowedVerbs, verb)) {
+          return;
+        }
 
         const acceptingParams = {};
         let returnType = 'JSON';
@@ -102,11 +108,12 @@ function addRemoteHooks(model) {
           }
         }
 
-        const hookName = `${method.name}${model.modelName}`;
+        const hookName = `${_.lowerFirst(model.modelName)}${_.upperFirst(method.name)}`;
         const type = getType(`${exchangeTypes[returnType] || returnType}`) || getType('JSON');
 
         hooks[hookName] = mutationWithClientMutationId({
           name: hookName,
+          description: method.description,
           meta: { relation: true },
           inputFields: acceptingParams,
           outputFields: {
@@ -134,17 +141,31 @@ function addRemoteHooks(model) {
 
 module.exports = function(models) {
 
-  const fields = {};
+  const modelFields = {};
   _.forEach(models, (model) => {
-    Object.assign(
-      fields,
-      saveAndDeleteMethods(model),
-      addRemoteHooks(model)
+
+    const fields = Object.assign({},
+      addRemoteHooks(model, ['post', 'delete', 'put', 'patch']),
+      saveAndDeleteMethods(model)
     );
+
+    if (_.size(fields) === 0) {
+      return;
+    }
+
+    modelFields[model.modelName] = {
+      resolve: (root, args, context) => ({}),
+      type: new GraphQLObjectType({
+        name: `${model.modelName}Mutations`,
+        description: model.modelName,
+        fields
+      })
+    };
+
   });
 
   return new GraphQLObjectType({
     name: 'Mutation',
-    fields
+    fields: modelFields
   });
 };

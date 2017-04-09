@@ -65,6 +65,30 @@ function saveAndDeleteMethods(model) {
   return fields;
 }
 
+function isRemoteMethodAllowed(method, allowedVerbs) {
+
+  let httpArray = method.http;
+
+  if (!_.isArray(method.http)) {
+    httpArray = [method.http];
+  }
+
+  const results = httpArray.map((item) => {
+
+    const verb = item.verb;
+
+    if (allowedVerbs && !_.includes(allowedVerbs, verb)) {
+      return false;
+    }
+
+    return true;
+  });
+
+  const result = _.includes(results, true);
+
+  return result;
+}
+
 function addRemoteHooks(model, allowedVerbs) {
 
   const hooks = {};
@@ -73,9 +97,7 @@ function addRemoteHooks(model, allowedVerbs) {
     model.sharedClass.methods().forEach((method) => {
       if (method.name.indexOf('Stream') === -1 && method.name.indexOf('invoke') === -1) {
 
-        const verb = method.http.verb;
-
-        if (allowedVerbs && !_.includes(allowedVerbs, verb)) {
+        if (!isRemoteMethodAllowed(method, allowedVerbs)) {
           return;
         }
 
@@ -153,7 +175,7 @@ module.exports = function(models) {
       return;
     }
 
-    modelFields[model.modelName] = {
+    modelFields[_.upperFirst(model.modelName)] = {
       resolve: (root, args, context) => ({}),
       type: new GraphQLObjectType({
         name: `${model.modelName}Mutations`,

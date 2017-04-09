@@ -85,7 +85,7 @@ module.exports = function(model, allowedVerbs) {
           }
         }
 
-        const hookName = `${_.lowerFirst(model.modelName)}${_.upperFirst(method.name)}`;
+        const hookName = `${model.modelName}${_.upperFirst(method.name)}`;
         const type = getType(`${exchangeTypes[returnType] || returnType}`) || getType('JSON');
 
         hooks[hookName] = mutationWithClientMutationId({

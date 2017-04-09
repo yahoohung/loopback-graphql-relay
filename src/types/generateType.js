@@ -177,15 +177,16 @@ function generateType(name, def) {
  * @param {*} models
  */
 function generateNodeDefinitions(models) {
-  let typeName;
-
   nodeDefinitions = relayNodeDefinitions(
     (globalId, context, { rootValue }) => {
       const { type, id } = fromGlobalId(globalId);
-      typeName = type;
-      return models[type].findById(id);
+      return models[type].findById(id).then((obj) => {
+        obj = obj.toJSON();
+        obj.__typename = type;
+        return Promise.resolve(obj);
+      });
     },
-    obj => getType(typeName)
+    obj => getType(obj.__typename)
   );
 }
 

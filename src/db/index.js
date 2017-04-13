@@ -53,10 +53,10 @@ function findRelatedOne(rel, obj, args, context) {
   if (_.isArray(obj[rel.keyFrom])) {
     return Promise.resolve([]);
   }
-  args.where = {
+  args = {
     [rel.keyTo]: obj[rel.keyFrom]
   };
-  return findOne(rel.modelTo, obj, args, context);
+  return findOne(rel.modelTo, null, args, context);
 }
 
 module.exports = {

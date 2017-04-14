@@ -13,7 +13,7 @@ function buildSelector(model, args) {
   selector.limit = args.last || args.first;
 
   if (model.getIdName && model.getIdName()) {
-    selector.order = model.getIdName() + (end ? ' DESC' : ' ASC');
+    selector.order = (args.order) ? args.order : model.getIdName() + (end ? ' DESC' : ' ASC');
     if (begin) {
       selector.where[model.getIdName()] = selector[model.getIdName()] || {};
       selector.where[model.getIdName()].gt = begin;

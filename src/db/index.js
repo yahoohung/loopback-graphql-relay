@@ -43,9 +43,13 @@ function findRelatedMany(rel, obj, args, context) {
   if (_.isArray(obj[rel.keyFrom])) {
     return Promise.resolve([]);
   }
-  args.where = {
+
+  const where = {
     [rel.keyTo]: obj[rel.keyFrom]
   };
+
+  args.where = (args.where) ? Object.assign({}, args.where, where) : where;
+
   return findAll(rel.modelTo, obj, args, context);
 }
 

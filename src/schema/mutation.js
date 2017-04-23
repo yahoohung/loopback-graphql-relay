@@ -36,9 +36,7 @@ function saveAndDeleteMethods(model) {
     outputFields: {
       obj: {
         type: getType(model.modelName),
-        resolve: o => {
-          return o;
-        }
+        resolve: o => o
       },
     },
     mutateAndGetPayload: ({ obj }) => {

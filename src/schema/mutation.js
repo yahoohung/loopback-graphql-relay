@@ -36,10 +36,17 @@ function saveAndDeleteMethods(model) {
     outputFields: {
       obj: {
         type: getType(model.modelName),
-        resolve: o => o
+        resolve: o => {
+          return o;
+        }
       },
     },
-    mutateAndGetPayload: ({ obj }) => model.upsert(Object.assign({}, obj))
+    mutateAndGetPayload: ({ obj }) => {
+      // Ugly hack to fix a known loopback issue (https://github.com/strongloop/loopback-datasource-juggler/issues/1261)
+      obj = JSON.parse(JSON.stringify(obj));
+
+      return model.upsert(obj);
+    }
   });
 
   fields[deleteFieldName] = mutationWithClientMutationId({

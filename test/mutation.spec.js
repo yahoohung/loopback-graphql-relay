@@ -56,6 +56,9 @@ describe('mutation', () => {
             obj {
               id
               title
+              content {
+                body
+              }
               author {
                 first_name
                 last_name
@@ -84,7 +87,7 @@ describe('mutation', () => {
             })
             .then((res) => {
               expect(res).to.have.status(200);
-                // expect(res.body.data.content.body).to.equal(body);
+              expect(res.body.data.Note.noteSave.obj.content.body).to.equal(body);
             });
   });
 
@@ -134,48 +137,6 @@ describe('mutation', () => {
             .then((res) => {
               expect(res).to.have.status(200);
               expect(res).to.have.deep.property('body.data.User.UserLogin.obj.id');
-            });
-  });
-
-  it('should call a remoteHook and return the related data', () => {
-    const query = gql `
-      query a {
-        Customer {
-          CustomerFindById(input: {id: "1"}) {
-            obj {
-              name
-              age
-              billingAddress {
-                id
-              }
-              emailList {
-                id
-              }
-              accountIds
-              orders {
-                edges {
-                  node {
-                    id
-                    date
-                    description
-                  }
-                }
-              }
-            }
-          }
-        }
-      }`;
-    return chai.request(server)
-            .post('/graphql')
-            .send({
-              query
-            })
-            .then((res) => {
-              expect(res).to.have.status(200);
-              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.name');
-              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.age');
-              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.orders.edges[0].node.id');
-              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.orders.edges[0].node.description');
             });
   });
 

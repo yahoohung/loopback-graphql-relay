@@ -84,8 +84,6 @@ describe('query', () => {
   });
 
 
-
-
   it('should call a remoteHook and return the related data', () => {
     const query = gql `
       query a {

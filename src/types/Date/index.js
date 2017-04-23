@@ -23,7 +23,7 @@ module.exports = new GraphQLScalarType({
   },
   parseLiteral(ast) {
     if (ast.kind !== Kind.STRING) {
-      throw new GraphQLError(`Query error: Can only parse strings to dates but got a: ${  ast.kind}`, [ast]);
+      throw new GraphQLError(`Query error: Can only parse strings to dates but got a: ${ast.kind}`, [ast]);
     }
     const result = new Date(ast.value);
     if (isNaN(result.getTime())) {

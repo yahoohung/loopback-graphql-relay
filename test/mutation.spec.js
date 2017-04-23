@@ -95,7 +95,7 @@ describe('mutation', () => {
     const query = gql `
       mutation delete($id: ID!) {
         Author {
-          authorDelete(input: {obj: {id: $id}}) {
+          authorDelete(input: {id: $id}) {
             clientMutationId
           }
         }

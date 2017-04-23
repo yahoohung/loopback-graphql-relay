@@ -6,7 +6,7 @@ const {
   mutationWithClientMutationId
 } = require('graphql-relay');
 
-const { GraphQLObjectType } = require('graphql');
+const { GraphQLObjectType, GraphQLNonNull } = require('graphql');
 
 const { getType } = require('../types/type');
 const getRemoteMethods = require('./utils/getRemoteMethods');
@@ -50,11 +50,11 @@ function saveAndDeleteMethods(model) {
   fields[deleteFieldName] = mutationWithClientMutationId({
     name: deleteFieldName,
     inputFields: {
-      obj: {
-        type: getType(InputModelName)
+      id: {
+        type: new GraphQLNonNull(getType('ID'))
       },
     },
-    mutateAndGetPayload: ({ obj }) => model.findById(obj.id).then(instance => instance.destroy())
+    mutateAndGetPayload: ({ id }) => model.destroyById(id)
   });
 
   return fields;

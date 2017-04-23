@@ -44,13 +44,15 @@ function findRelatedMany(rel, obj, args, context) {
     return Promise.resolve([]);
   }
 
-  const where = {
-    [rel.keyTo]: obj[rel.keyFrom]
-  };
+  return obj[rel.name](buildSelector(rel.modelTo, args));
 
-  args.where = (args.where) ? Object.assign({}, args.where, where) : where;
+  // const where = {
+  //   [rel.keyTo]: obj[rel.keyFrom]
+  // };
 
-  return findAll(rel.modelTo, obj, args, context);
+  // args.where = (args.where) ? Object.assign({}, args.where, where) : where;
+
+  // return findAll(rel.modelTo, obj, args, context);
 }
 
 function findRelatedOne(rel, obj, args, context) {

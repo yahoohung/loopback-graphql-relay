@@ -22,8 +22,8 @@ function saveAndDeleteMethods(model) {
     return;
   }
 
-  const saveFieldName = `${_.lowerFirst(model.modelName)}Save`;
-  const deleteFieldName = `${_.lowerFirst(model.modelName)}Delete`;
+  const saveFieldName = `${model.modelName}Save`;
+  const deleteFieldName = `${model.modelName}Delete`;
   const InputModelName = `${model.modelName}Input`;
 
   fields[saveFieldName] = mutationWithClientMutationId({

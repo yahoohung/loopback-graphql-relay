@@ -19,7 +19,7 @@ describe('mutation', () => {
     const query = gql `
       mutation save($obj: AuthorInput!) {
         Author {
-          authorSave(input: {obj: $obj}) {
+          AuthorSave(input: {obj: $obj}) {
             obj {
               first_name
               last_name
@@ -52,7 +52,7 @@ describe('mutation', () => {
     const query = gql `
       mutation save($obj: NoteInput!) {
         Note {
-          noteSave(input: {obj: $obj}) {
+          NoteSave(input: {obj: $obj}) {
             obj {
               id
               title
@@ -87,7 +87,7 @@ describe('mutation', () => {
             })
             .then((res) => {
               expect(res).to.have.status(200);
-              expect(res.body.data.Note.noteSave.obj.content.body).to.equal(body);
+              expect(res.body.data.Note.NoteSave.obj.content.body).to.equal(body);
             });
   });
 
@@ -95,7 +95,7 @@ describe('mutation', () => {
     const query = gql `
       mutation delete($id: ID!) {
         Author {
-          authorDelete(input: {obj: {id: $id}}) {
+          AuthorDelete(input: {id: $id}) {
             clientMutationId
           }
         }

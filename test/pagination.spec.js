@@ -55,24 +55,24 @@ describe('Pagination', () => {
 
   it('should query entity after cursor', () => {
     const query = gql `{
-        viewer {
-            notes(after: "Tm90ZTo0", first: 3) {
-            pageInfo {
-                hasNextPage
-                hasPreviousPage
-                startCursor
-                endCursor
-            }
-            edges {
-                node {
-                id
-                title
-                }
-                cursor
-            }
-            }
-        }
-        }`;
+			viewer {
+				notes (after: "YXJyYXljb25uZWN0aW9uOjM=", first: 3){
+					pageInfo {
+						hasNextPage
+						hasPreviousPage
+						startCursor
+						endCursor
+					}
+					edges {
+						node {
+							id
+							title
+						}
+						cursor
+					}
+				}
+			}
+		}`;
     return chai.request(server)
             .post('/graphql')
             .send({

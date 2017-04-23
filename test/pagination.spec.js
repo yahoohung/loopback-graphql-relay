@@ -56,7 +56,7 @@ describe('Pagination', () => {
   it('should query entity after cursor', () => {
     const query = gql `{
 			viewer {
-				notes (after: "YXJyYXljb25uZWN0aW9uOjM=", first: 3){
+				notes (after: "YXJyYXljb25uZWN0aW9uOjM=", first: 1){
 					pageInfo {
 						hasNextPage
 						hasPreviousPage
@@ -83,7 +83,7 @@ describe('Pagination', () => {
               res = res.body.data;
               expect(res.viewer.notes.edges.length).to.be.above(0);
               expect(fromGlobalId(res.viewer.notes.edges[0].node.id).id).to.be.above(4);
-              expect(res.viewer.notes.pageInfo.hasPreviousPage).to.be.true;
+              expect(res.viewer.notes.pageInfo.hasNextPage).to.be.true;
             });
   });
 

@@ -2,37 +2,13 @@
 
 const _ = require('lodash');
 
-function buildSelector(model, args) {
-  const selector = {
-    where: args.where || {}
-  };
-  const begin = args.after;
-  const end = args.before;
-
-  selector.skip = args.first - args.last || 0;
-  selector.limit = args.last || args.first;
-
-  if (model.getIdName && model.getIdName()) {
-    selector.order = (args.order) ? args.order : model.getIdName() + (end ? ' DESC' : ' ASC');
-    if (begin) {
-      selector.where[model.getIdName()] = selector[model.getIdName()] || {};
-      selector.where[model.getIdName()].gt = begin;
-    }
-    if (end) {
-      selector.where[model.getIdName()] = selector[model.getIdName()] || {};
-      selector.where[model.getIdName()].lt = end;
-    }
-  }
-  return selector;
-}
-
 function findOne(model, obj, args, context) {
   const id = obj ? obj[model.getIdName()] : args.id;
   return model.findById(id);
 }
 
 function getList(model, obj, args) {
-  return model.find(buildSelector(model, args));
+  return model.find(args);
 }
 
 function findAll(model, obj, args, context) {
@@ -44,7 +20,7 @@ function findRelatedMany(rel, obj, args, context) {
     return Promise.resolve([]);
   }
 
-  return obj[rel.name](buildSelector(rel.modelTo, args));
+  return obj[rel.name](args);
 
   // const where = {
   //   [rel.keyTo]: obj[rel.keyFrom]

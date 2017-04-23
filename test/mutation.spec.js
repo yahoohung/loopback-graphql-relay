@@ -17,14 +17,17 @@ describe('mutation', () => {
 
   it('should add a single entity', () => {
     const query = gql `
-            mutation save ($obj: AuthorInput!) {
-                saveAuthor (obj: $obj) {
-                    first_name
-                    last_name
-                    birth_date
-                }
-           }
-        `;
+      mutation save($obj: AuthorInput!) {
+        Author {
+          authorSave(input: {obj: $obj}) {
+            obj {
+              first_name
+              last_name
+              birth_date
+            }
+          }
+        }
+      }`;
     const variables = {
       obj: {
         first_name: 'Virginia',
@@ -47,17 +50,20 @@ describe('mutation', () => {
   it('should add a single entity with sub type', () => {
     const body = 'Heckelbery Finn';
     const query = gql `
-            mutation save ($obj: NoteInput!) {
-                saveNote (obj: $obj) {
-                    id
-                    title
-                    author {
-                        first_name
-                        last_name
-                    }
-
-                }
-           }
+      mutation save($obj: NoteInput!) {
+        Note {
+          noteSave(input: {obj: $obj}) {
+            obj {
+              id
+              title
+              author {
+                first_name
+                last_name
+              }
+            }
+          }
+        }
+      }
         `;
     const variables = {
       obj: {
@@ -84,12 +90,13 @@ describe('mutation', () => {
 
   it('should delete a single entity', () => {
     const query = gql `
-            mutation delete ($id: ID!) {
-                deleteAuthor (id: $id) {
-                    text
-                }
-           }
-        `;
+      mutation delete($id: ID!) {
+        Author {
+          authorDelete(input: {obj: {id: $id}}) {
+            clientMutationId
+          }
+        }
+      }`;
     const variables = {
       id: 4
     };
@@ -107,10 +114,18 @@ describe('mutation', () => {
 
   it('should login and return an accessToken', () => {
     const query = gql `
-          mutation login{
-            loginUser(credentials:{username:"naveenmeher", password:"welcome"})
+      mutation login {
+        User {
+          UserLogin(input:{
+            credentials: {
+              username: "naveenmeher", 
+              password: "welcome"
+            }
+          }) {
+            obj
           }
-        `;
+        }
+      }`;
     return chai.request(server)
             .post('/graphql')
             .send({
@@ -118,35 +133,38 @@ describe('mutation', () => {
             })
             .then((res) => {
               expect(res).to.have.status(200);
-              expect(res).to.have.deep.property('body.data.loginUser.id');
+              expect(res).to.have.deep.property('body.data.User.UserLogin.obj.id');
             });
   });
 
   it('should call a remoteHook and return the related data', () => {
     const query = gql `
-        mutation a{
-          findByIdCustomer(id:"1"){
-            name
-            age
-            billingAddress {
-              id
-            }
-            emailList {
-              id
-            }
-            accountIds
-            orders {
-              edges {
-                node {
-                  id
-                  date
-                  description
+      query a {
+        Customer {
+          CustomerFindById(input: {id: "1"}) {
+            obj {
+              name
+              age
+              billingAddress {
+                id
+              }
+              emailList {
+                id
+              }
+              accountIds
+              orders {
+                edges {
+                  node {
+                    id
+                    date
+                    description
+                  }
                 }
               }
             }
           }
         }
-        `;
+      }`;
     return chai.request(server)
             .post('/graphql')
             .send({
@@ -154,10 +172,10 @@ describe('mutation', () => {
             })
             .then((res) => {
               expect(res).to.have.status(200);
-              expect(res).to.have.deep.property('body.data.findByIdCustomer.name');
-              expect(res).to.have.deep.property('body.data.findByIdCustomer.age');
-              expect(res).to.have.deep.property('body.data.findByIdCustomer.orders.edges[0].node.id');
-              expect(res).to.have.deep.property('body.data.findByIdCustomer.orders.edges[0].node.description');
+              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.name');
+              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.age');
+              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.orders.edges[0].node.id');
+              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.orders.edges[0].node.description');
             });
   });
 

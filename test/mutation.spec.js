@@ -11,7 +11,7 @@ const cpx = require('cpx');
 const gql = require('graphql-tag');
 // var _ = require('lodash');
 
-describe('mutation', () => {
+describe('Mutations', () => {
 
   before(() => Promise.fromCallback(cb => cpx.copy('./data.json', './data/', cb)));
 

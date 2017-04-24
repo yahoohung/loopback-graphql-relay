@@ -8,7 +8,7 @@ const gql = require('graphql-tag');
 const Promise = require('bluebird');
 const cpx = require('cpx');
 
-describe('query', () => {
+describe('Types', () => {
 
   before(() => Promise.fromCallback(cb => cpx.copy('./data.json', './data/', cb)));
 

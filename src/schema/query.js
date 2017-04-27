@@ -43,15 +43,32 @@ function getRelatedModelFields(models) {
 }
 
 
-function getMeField() {
+function getMeField(userModelName) {
+  if (userModelName) {
+    return {
+      me: {
+        type: getType(userModelName),
+        resolve: (obj, args, { app, req }) => {
+
+          if (!req.headers.accesstoken) return null;
+
+          return app.models[userModelName].findById(req.headers.accesstoken).then((user) => {
+            user = user.toJSON();
+            if (!user) return Promise.reject('No user with this access token was found.');
+            return Promise.resolve(user);
+          });
+        }
+      }
+    };
+  }
   return {
     me: {
       type: getType('User'),
       resolve: (obj, args, { app, req }) => {
 
-        if (!req.accessToken) return null;
+        if (!req.headers.accesstoken) return null;
 
-        return app.models.User.findById(req.accessToken.userId).then((user) => {
+        return app.models.User.findById(req.headers.accesstoken).then((user) => {
           user = user.toJSON();
           if (!user) return Promise.reject('No user with this access token was found.');
           return Promise.resolve(user);

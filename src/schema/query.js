@@ -54,7 +54,7 @@ function getMeField(userModelName) {
 
           return app.models[userModelName].findById(req.headers.accesstoken).then((user) => {
             user = user.toJSON();
-            if (!user) return Promise.reject('No user with this access token was found.');
+            if (!user) return Promise.reject('No Account with this access token was found.');
             return Promise.resolve(user);
           });
         }
@@ -82,7 +82,7 @@ function getMeField(userModelName) {
  * Generates Viewer query
  * @param {*} models
  */
-function generateViewer(models) {
+function generateViewer(models, userModelName) {
 
   const Viewer = {
     resolve: (root, args, context) => ({}),
@@ -91,7 +91,7 @@ function generateViewer(models) {
       description: 'Viewer',
       // interfaces: () => [nodeDefinitions.nodeInterface],
       fields: () => Object.assign({},
-          getMeField(),
+          getMeField(userModelName),
           getRelatedModelFields(models)
         )
     })
@@ -128,12 +128,12 @@ function generateModelFields(models) {
   return modelFields;
 }
 
-module.exports = function(models) {
+module.exports = function(models, userModelName) {
 
   const fields = Object.assign({},
     {
       node: getType('node'),
-      viewer: generateViewer(models)
+      viewer: generateViewer(models, userModelName)
     },
     generateModelFields(models)
   );

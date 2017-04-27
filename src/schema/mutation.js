@@ -66,7 +66,7 @@ module.exports = function(models) {
   _.forEach(models, (model) => {
 
     const fields = Object.assign({},
-      getRemoteMethods(model, ['post', 'delete', 'put', 'patch']),
+      getRemoteMethods(model, ['post', 'delete', 'put', 'patch', 'all']),
       saveAndDeleteMethods(model)
     );
 

@@ -13,7 +13,7 @@ function resolveMaybeThunk(maybeThunk) {
 }
 
 function defaultGetPayload(obj) {
-  return (obj && obj.data) ? obj.data.toJSON() : null;
+  return (obj && obj.data) ? obj.data : null;
 }
 
 module.exports = function subscriptionWithPayload({

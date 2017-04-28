@@ -11,7 +11,7 @@ function getSchema(models, options) {
   getTypes(models);
 
   const items = {
-    query: getQuery(models),
+    query: getQuery(models, options.userModelName),
     mutation: getMutation(models),
   };
 

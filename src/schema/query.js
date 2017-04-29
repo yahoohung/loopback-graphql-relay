@@ -43,15 +43,32 @@ function getRelatedModelFields(models) {
 }
 
 
-function getMeField() {
+function getMeField(userModelName) {
+  if (userModelName) {
+    return {
+      me: {
+        type: getType(userModelName),
+        resolve: (obj, args, { app, req }) => {
+
+          if (!req.headers.accesstoken) return null;
+
+          return app.models[userModelName].findById(req.headers.accesstoken).then((user) => {
+            user = user.toJSON();
+            if (!user) return Promise.reject('No Account with this access token was found.');
+            return Promise.resolve(user);
+          });
+        }
+      }
+    };
+  }
   return {
     me: {
       type: getType('User'),
       resolve: (obj, args, { app, req }) => {
 
-        if (!req.accessToken) return null;
+        if (!req.headers.accesstoken) return null;
 
-        return app.models.User.findById(req.accessToken.userId).then((user) => {
+        return app.models.User.findById(req.headers.accesstoken).then((user) => {
           user = user.toJSON();
           if (!user) return Promise.reject('No user with this access token was found.');
           return Promise.resolve(user);
@@ -65,7 +82,7 @@ function getMeField() {
  * Generates Viewer query
  * @param {*} models
  */
-function generateViewer(models) {
+function generateViewer(models, userModelName) {
 
   const Viewer = {
     resolve: (root, args, context) => ({}),
@@ -74,7 +91,7 @@ function generateViewer(models) {
       description: 'Viewer',
       // interfaces: () => [nodeDefinitions.nodeInterface],
       fields: () => Object.assign({},
-          getMeField(),
+          getMeField(userModelName),
           getRelatedModelFields(models)
         )
     })
@@ -111,12 +128,12 @@ function generateModelFields(models) {
   return modelFields;
 }
 
-module.exports = function(models) {
+module.exports = function(models, userModelName) {
 
   const fields = Object.assign({},
     {
       node: getType('node'),
-      viewer: generateViewer(models)
+      viewer: generateViewer(models, userModelName)
     },
     generateModelFields(models)
   );

@@ -4,19 +4,59 @@
 
 # Relay GraphQL Server for Loopback (Apollo Server)
 
-Combine the powers of [ApolloStack](http://www.apollostack.com/) GraphQL with the backend of Loopback.
-
-Uses [graphql-js](https://github.com/graphql/graphql-js) and [graphql-relay-js](https://github.com/graphql/graphql-relay-js) to compile schema.
-
-All of Loopback models are exposed as GraphQL Queries.
-
-Define models in Loopback to be exposed as REST APIs and GraphQL queries and mutations *.
-
-Use the Apollo [clients](http://dev.apollodata.com/) to access your data. 
+Combine the powers of [ApolloStack](http://www.apollostack.com/) GraphQL with the backend of Loopback to automatically generate GraphQL endpoints based on Loopback Schema.
 
 ![Loopback Graphql](./resources/loopback-graphql.png?raw=true "LoopBack Apollo Architecture") 
 
-## Getting started
+## Queries 💥
+- Relay Specification: `node` query to fetch single entity by ID
+- `viewer` query to fetch all models for a viewer
+- Filter support for `where` and `order` filters on queries
+- Support for relations and querying related data
+- Relay Connections support for listed data
+- Relay Pagination (`first`, `last`, `before`, `after`)
+- Remote methods integration
+
+## Mutations 🎊
+- Nested and clean schema structure
+- Maps all `post`, `put`, `patch` and `delete` methods to mutations
+- Remote methods integration
+
+## Subscriptions ⚡️
+- `create`, `update` and `remove` events of all shared models.
+
+## Other Features 🎉
+### Loopback Types
+- [x] Any
+- [x] Array
+- [x] Boolean
+- [ ] Buffer
+- [x] Date
+- [x] GeoPoint
+- [x] Null
+- [x] Number
+- [x] Object
+- [x] String
+
+### Loopback Relations
+- [x] BelongsTo
+- [x] HasOne
+- [x] HasMany
+- [ ] HasManyThrough
+- [x] HasAndBelongsToMany
+- [ ] Polymorphic
+- [x] EmbedsOne
+- [x] EmbedsMany
+- [x] ReferencesMany
+
+### Misc
+- Accepts AccessToken for authenticated API calls
+
+### Todo
+- [ ] File uploads
+
+
+## Usage
 
 ```sh
 npm install loopback-graphql-relay
@@ -41,24 +81,6 @@ Requests will be posted to `path` path. (Default: `/graphql`);
 Graphiql is available on `graphiqlPath` path. (Default: `/graphiql`);
 
 Apollo's Subscription Server can be customised by passing `subscriptionServer` configuration. More information can be found at [SubscriptionServer Docs](https://github.com/apollographql/subscriptions-transport-ws#subscriptionserver).
-
-## Usage
-
-Access the Graphiql interface to view your GraphQL model onthe Docs section. 
-Build the GraphQL queries and use them in your application.
-
-The following actions are supported: 
-###  Queries
-* Node query to fetch single entity by ID
-* Multiple entities with pagination (first, after)
-* Relationship between entities (belongs to, has many)
-
-### Mutations
-* Save single object
-* Delete single object 
-
-### Subscriptions
-* `create`, `update` and `remove` events of all shared models.
 
 ## Inspiration
 This repository originally started as a fork of the [loopback-graphql](https://github.com/Tallyb/loopback-graphql) project by [Tallyb](https://github.com/Tallyb). But due to considerable change in the way query end points are created, this repository is maitained as an independant project.

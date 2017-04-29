@@ -63,8 +63,7 @@ module.exports = {
             scalar: true,
             required: true,
             type: 'Float',
-          },
-          resolve: obj => obj.lat
+          }
         },
         lng: {
           generated: false,
@@ -72,8 +71,7 @@ module.exports = {
             scalar: true,
             required: true,
             type: 'Float',
-          },
-          resolve: obj => obj.lng
+          }
         }
       }
     }

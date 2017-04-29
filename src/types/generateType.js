@@ -127,6 +127,11 @@ function generateTypeFields(def) {
     // Field arguments
     field.args = generateFieldArgs(field);
 
+    // Is Inpuut Type?
+    if (def.meta.input === true) {
+      delete field.resolve;
+    }
+
     fields[fieldName] = field;
   });
 

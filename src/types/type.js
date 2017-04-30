@@ -67,7 +67,17 @@ const getScalar = (name) => {
  */
 const getConnection = (name) => {
   if (!connectionTypes[name]) {
-    connectionTypes[name] = connectionDefinitions({ name, nodeType: getType(name) }).connectionType;
+    connectionTypes[name] = connectionDefinitions({
+      name,
+      nodeType: getType(name),
+      connectionFields: {
+        totalCount: {
+          type: GraphQLInt,
+          description: 'Total number of items',
+          resolve: connection => connection.totalCount,
+        },
+      },
+    }).connectionType;
   }
   return connectionTypes[name];
 };

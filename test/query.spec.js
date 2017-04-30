@@ -125,4 +125,24 @@ describe('Queries', () => {
               expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.orders.edges[0].node.description');
             });
   });
+
+  it('should have a total count of 7', () => {
+    const query = gql `
+      {
+        viewer {
+          customers {
+            totalCount
+          }
+        }
+      }`;
+    return chai.request(server)
+            .post('/graphql')
+            .send({
+              query
+            })
+            .then((res) => {
+              expect(res).to.have.status(200);
+              expect(res.body.data.viewer.customers.totalCount).to.equal(7);
+            });
+  });
 });

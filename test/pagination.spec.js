@@ -21,26 +21,25 @@ describe('Pagination', () => {
 
   it('should query first 2 entities', () => {
     const query = gql `{
-        viewer {
-            notes(first: 2) {
-            # totalCount
-            pageInfo {
-                hasNextPage
-                hasPreviousPage
-                startCursor
-                endCursor
+      viewer {
+        notes(first: 2) {
+          totalCount
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+          }
+          edges {
+            node {
+              title
+              id
             }
-            edges {
-                node {
-                title
-                id
-                }
-                cursor
-            }
-            }
+            cursor
+          }
         }
-        }
-        `;
+      }
+    }`;
     return chai.request(server)
             .post('/graphql')
             .send({
@@ -50,29 +49,30 @@ describe('Pagination', () => {
               expect(res).to.have.status(200);
               res = res.body.data;
               expect(res.viewer.notes.edges.length).to.be.above(0);
+              expect(res.viewer.notes.totalCount).to.be.above(14);
             });
   });
 
   it('should query entity after cursor', () => {
     const query = gql `{
-			viewer {
-				notes (after: "YXJyYXljb25uZWN0aW9uOjM=", first: 1){
-					pageInfo {
-						hasNextPage
-						hasPreviousPage
-						startCursor
-						endCursor
-					}
-					edges {
-						node {
-							id
-							title
-						}
-						cursor
-					}
-				}
-			}
-		}`;
+      viewer {
+        notes(after: "Y29ubmVjdGlvbi40", first: 1) {
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+          }
+          edges {
+            node {
+              id
+              title
+            }
+            cursor
+          }
+        }
+      }
+    }`;
     return chai.request(server)
             .post('/graphql')
             .send({
@@ -82,7 +82,7 @@ describe('Pagination', () => {
               expect(res).to.have.status(200);
               res = res.body.data;
               expect(res.viewer.notes.edges.length).to.be.above(0);
-              expect(fromGlobalId(res.viewer.notes.edges[0].node.id).id).to.be.above(4);
+              expect(fromGlobalId(res.viewer.notes.edges[0].node.id).id).to.equal('5');
               expect(res.viewer.notes.pageInfo.hasNextPage).to.be.true;
             });
   });
@@ -102,7 +102,7 @@ describe('Pagination', () => {
 							id
 							last_name
 							notes {
-								# totalCount
+								totalCount
 								edges {
 									node {
 										title
@@ -124,7 +124,7 @@ describe('Pagination', () => {
               expect(res).to.have.status(200);
               res = res.body.data;
               expect(res.viewer.authors.edges[0].node.notes.edges.length).to.be.above(0);
-            //   expect(res.viewer.authors.edges[0].node.notes.totalCount).to.be.above(0);
+              expect(res.viewer.authors.edges[0].node.notes.totalCount).to.be.above(0);
               expect(res.viewer.authors.edges[0].cursor).not.to.be.empty;
             });
   });

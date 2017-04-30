@@ -12,7 +12,7 @@ describe('Types', () => {
 
   before(() => Promise.fromCallback(cb => cpx.copy('./data.json', './data/', cb)));
 
-  describe('Geo Type', () => {
+  describe('GeoPoint', () => {
     it('should contain a single object with location', () => {
       const query = gql `
         {

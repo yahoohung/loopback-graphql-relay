@@ -3,13 +3,13 @@
 const _ = require('lodash');
 
 const {
-	connectionArgs,
-  connectionFromPromisedArray
+	connectionArgs
 } = require('graphql-relay');
 
 const { GraphQLObjectType } = require('graphql');
 const { getType, getConnection } = require('../types/type');
 const { findAll } = require('../db');
+const { connectionFromPromisedArray } = require('../db/resolveConnection');
 const getRemoteMethods = require('./utils/getRemoteMethods');
 
 /**
@@ -35,7 +35,7 @@ function getRelatedModelFields(models) {
         },
       }, connectionArgs),
       type: getConnection(model.modelName),
-      resolve: (obj, args, context) => connectionFromPromisedArray(findAll(model, obj, args, context), args)
+      resolve: (obj, args, context) => connectionFromPromisedArray(findAll(model, obj, args, context), args, model)
     };
   });
 

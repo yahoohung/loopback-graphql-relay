@@ -6,9 +6,10 @@
     "RoleMapping": 1,
     "Role": 1,
     "Note": 14,
-    "Author": 10,
+    "Author": 11,
     "Reader": 2,
-    "Book": 2,
+    "Book": 3,
+    "BookAuthor": 2,
     "Customer": 8,
     "Address": 1,
     "EmailAddress": 1,
@@ -35,6 +36,9 @@
     "ACL": {},
     "RoleMapping": {},
     "Role": {},
+    "BookAuthor": {
+      "1": "{\"bookId\":2,\"authorId\":10,\"id\":1}"
+    },
     "Note": {
       "1": "{\"title\":\"1st note\",\"id\":1}",
       "2": "{\"title\":\"Who is Afraid\",\"Genre\":\"HUMOR\",\"authorId\":3,\"id\":2}",
@@ -57,13 +61,15 @@
       "6": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2017-04-27T07:17:06.900Z\",\"friendIds\":[],\"id\":6}",
       "7": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2017-04-27T07:17:26.925Z\",\"friendIds\":[],\"id\":7}",
       "8": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2017-04-27T13:22:02.604Z\",\"friendIds\":[],\"id\":8}",
-      "9": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2017-04-27T13:25:59.516Z\",\"friendIds\":[],\"id\":9}"
+      "9": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2017-04-27T13:25:59.516Z\",\"friendIds\":[],\"id\":9}",
+      "10": "{\"first_name\":\"Cool\",\"last_name\":\"Man\",\"birth_date\":\"2017-04-30T08:58:17.742Z\",\"friendIds\":[],\"id\":10}"
     },
     "Reader": {
       "1": "{\"name\":\"Reader 1\",\"id\":1}"
     },
     "Book": {
-      "1": "{\"name\":\"Book 1\",\"links\":[{\"id\":1,\"name\":\"Author 1\",\"notes\":\"Note 1\",\"linkedId\":1,\"linkedType\":\"Author\"},{\"id\":2,\"name\":\"Reader 1\",\"notes\":\"Note 2\",\"linkedId\":1,\"linkedType\":\"Reader\"}],\"id\":1}"
+      "1": "{\"name\":\"Book 1\",\"links\":[{\"id\":1,\"name\":\"Author 1\",\"notes\":\"Note 1\",\"linkedId\":1,\"linkedType\":\"Author\"},{\"id\":2,\"name\":\"Reader 1\",\"notes\":\"Note 2\",\"linkedId\":1,\"linkedType\":\"Reader\"}],\"id\":1}",
+      "2": "{\"name\":\"Cool Book\",\"links\":[],\"id\":2}"
     },
     "Order": {
       "1": "{\"date\":\"2014-12-31T18:30:00.000Z\",\"description\":\"First order by Customer A\",\"customerId\":1,\"id\":1}",

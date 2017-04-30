@@ -145,4 +145,32 @@ describe('Queries', () => {
               expect(res.body.data.viewer.customers.totalCount).to.equal(7);
             });
   });
+
+
+  it('should sort books by name in descending order', () => {
+    const query = gql `
+      {
+        viewer {
+          books (order: "name DESC") {
+            totalCount
+            edges {
+              node {
+                id
+                name
+              }
+            }
+          }
+        }
+      }`;
+    return chai.request(server)
+            .post('/graphql')
+            .send({
+              query
+            })
+            .then((res) => {
+              expect(res).to.have.status(200);
+              expect(res.body.data.viewer.books.totalCount).to.equal(3);
+              expect(res.body.data.viewer.books.edges[0].node.name).to.equal('Lame Book');
+            });
+  });
 });

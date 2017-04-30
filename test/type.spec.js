@@ -43,7 +43,7 @@ describe('Types', () => {
                 });
     });
   });
-  describe('Geo Type', () => {
+  describe('GeoPoint', () => {
     it('should have location distance of 486 miles', () => {
       const query = gql `
         {

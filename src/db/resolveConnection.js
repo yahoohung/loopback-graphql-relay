@@ -32,8 +32,8 @@ function connectionFromArray(obj, args, model) {
   if (obj.count > 0) {
     res.pageInfo.startCursor = utils.idToCursor(obj.list[0][idName]);
     res.pageInfo.endCursor = utils.idToCursor(obj.list[obj.list.length - 1][idName]);
-    res.pageInfo.hasNextPage = obj.list.length === (obj.args.last || obj.args.first);
-    res.pageInfo.hasPreviousPage = obj.list[0][idName].toString() !== obj.first[idName].toString();
+    res.pageInfo.hasNextPage = Boolean(args.first && obj.count > args.first);
+    res.pageInfo.hasPreviousPage = Boolean(args.last && obj.count > args.last);
   }
 
   return res;

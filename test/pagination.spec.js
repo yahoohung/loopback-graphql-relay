@@ -49,7 +49,7 @@ describe('Pagination', () => {
               expect(res).to.have.status(200);
               res = res.body.data;
               expect(res.viewer.notes.edges.length).to.be.above(0);
-              expect(res.viewer.notes.totalCount).to.be.above(14);
+              expect(res.viewer.notes.totalCount).to.equal(14);
             });
   });
 

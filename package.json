@@ -42,6 +42,7 @@
   },
   "homepage": "https://github.com/BlueEastCode/loopback-graphql-relay#readme",
   "dependencies": {
+    "async": "^2.4.0",
     "body-parser": "^1.15.2",
     "event-stream": "^3.3.4",
     "graphql": "^0.9.5",

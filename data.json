@@ -8,8 +8,8 @@
     "Note": 14,
     "Author": 11,
     "Reader": 2,
-    "Book": 3,
-    "BookAuthor": 2,
+    "Book": 4,
+    "BookAuthor": 3,
     "Customer": 8,
     "Address": 1,
     "EmailAddress": 1,
@@ -37,7 +37,8 @@
     "RoleMapping": {},
     "Role": {},
     "BookAuthor": {
-      "1": "{\"bookId\":2,\"authorId\":10,\"id\":1}"
+      "1": "{\"bookId\":2,\"authorId\":10,\"id\":1}",
+      "2": "{\"bookId\":3,\"authorId\":10,\"id\":2}"
     },
     "Note": {
       "1": "{\"title\":\"1st note\",\"id\":1}",
@@ -69,7 +70,8 @@
     },
     "Book": {
       "1": "{\"name\":\"Book 1\",\"links\":[{\"id\":1,\"name\":\"Author 1\",\"notes\":\"Note 1\",\"linkedId\":1,\"linkedType\":\"Author\"},{\"id\":2,\"name\":\"Reader 1\",\"notes\":\"Note 2\",\"linkedId\":1,\"linkedType\":\"Reader\"}],\"id\":1}",
-      "2": "{\"name\":\"Cool Book\",\"links\":[],\"id\":2}"
+      "2": "{\"name\":\"Cool Book\",\"links\":[],\"id\":2}",
+      "3": "{\"name\":\"Lame Book\",\"links\":[],\"id\":3}"
     },
     "Order": {
       "1": "{\"date\":\"2014-12-31T18:30:00.000Z\",\"description\":\"First order by Customer A\",\"customerId\":1,\"id\":1}",

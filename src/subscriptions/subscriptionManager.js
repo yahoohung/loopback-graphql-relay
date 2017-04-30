@@ -15,7 +15,7 @@ module.exports = function(models, schema, pubsub) {
       const ret = {};
       ret[_.lowerCase(model.modelName)] = {
           // filter: comment => comment.repository_name === args.repoFullName,
-        channelOptions: getOptions(model, args)
+        channelOptions: getOptions(model, options, args)
       };
 
       return ret;
@@ -34,8 +34,9 @@ module.exports = function(models, schema, pubsub) {
   });
 };
 
-function getOptions(model, args) {
+function getOptions(model, options, args) {
   const basicOpts = {
+    context: options.context,
     create: (!_.isNil(args.input.create)) ? args.input.create : false,
     update: (!_.isNil(args.input.update)) ? args.input.update : false,
     remove: (!_.isNil(args.input.remove)) ? args.input.remove : false,

@@ -116,7 +116,7 @@ function generateTypeFields(def) {
     }
 
     if (field.meta.relation === true) {
-      field.type = getConnection(field.meta.type);
+      field.type = (field.meta.isMany === true) ? getConnection(field.meta.type) : getType(field.meta.type);
     } else if (field.meta.list) {
       // field.type = getConnection(field.meta.type);
       field.type = new GraphQLList(getType(field.meta.type));
@@ -126,6 +126,11 @@ function generateTypeFields(def) {
 
     // Field arguments
     field.args = generateFieldArgs(field);
+
+    // Is Inpuut Type?
+    if (def.meta.input === true) {
+      delete field.resolve;
+    }
 
     fields[fieldName] = field;
   });
@@ -177,15 +182,15 @@ function generateType(name, def) {
  * @param {*} models
  */
 function generateNodeDefinitions(models) {
-  let typeName;
-
   nodeDefinitions = relayNodeDefinitions(
     (globalId, context, { rootValue }) => {
       const { type, id } = fromGlobalId(globalId);
-      typeName = type;
-      return models[type].findById(id);
+      return models[type].findById(id).then((obj) => {
+        obj.__typename = type;
+        return Promise.resolve(obj);
+      });
     },
-    obj => getType(typeName)
+    obj => getType(obj.__typename)
   );
 }
 

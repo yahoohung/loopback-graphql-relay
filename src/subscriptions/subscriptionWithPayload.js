@@ -13,7 +13,7 @@ function resolveMaybeThunk(maybeThunk) {
 }
 
 function defaultGetPayload(obj) {
-  return (obj && obj.data) ? obj.data.toJSON() : null;
+  return (obj && obj.data) ? obj.data : null;
 }
 
 module.exports = function subscriptionWithPayload({
@@ -34,7 +34,8 @@ module.exports = function subscriptionWithPayload({
   });
 
   const outputFields = {};
-  outputFields[`${_.lowerCase(model.modelName)}`] = {
+  const modelFieldName = _.camelCase(_.lowerCase(model.modelName));
+  outputFields[modelFieldName] = {
     type: getType(model.modelName),
     resolve: o => o.object
   };

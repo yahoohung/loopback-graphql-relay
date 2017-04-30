@@ -12,7 +12,7 @@ const {
 
 const { connectionDefinitions } = require('graphql-relay');
 
-const CustomGraphQLDateType = require('graphql-custom-datetype');
+const CustomGraphQLDateType = require('./Date');
 const GraphQLJSON = require('graphql-type-json');
 
 const { getTypeDef } = require('./generateTypeDefs');
@@ -67,7 +67,17 @@ const getScalar = (name) => {
  */
 const getConnection = (name) => {
   if (!connectionTypes[name]) {
-    connectionTypes[name] = connectionDefinitions({ name, nodeType: getType(name) }).connectionType;
+    connectionTypes[name] = connectionDefinitions({
+      name,
+      nodeType: getType(name),
+      connectionFields: {
+        totalCount: {
+          type: GraphQLInt,
+          description: 'Total number of items',
+          resolve: connection => connection.totalCount,
+        },
+      },
+    }).connectionType;
   }
   return connectionTypes[name];
 };

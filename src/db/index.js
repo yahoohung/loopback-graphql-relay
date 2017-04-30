@@ -74,7 +74,7 @@ function findAllViaThrough(rel, obj, args, context) {
       },
       function(first, callback) {
         response.first = first;
-        obj[`__get__${rel.name}`](buildFilter(rel.modelTo, args), callback);
+        obj[`__get__${rel.name}`](buildFilter(rel.modelTo, Object.assign({}, args, { count: response.count })), callback);
       }
     ], (err, list) => {
 

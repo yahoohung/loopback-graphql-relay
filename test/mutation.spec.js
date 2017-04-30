@@ -30,8 +30,8 @@ describe('Mutations', () => {
       }`;
     const variables = {
       obj: {
-        first_name: 'Virginia',
-        last_name: 'Wolf',
+        first_name: 'Unit Test',
+        last_name: 'Author',
         birth_date: new Date()
       }
     };

@@ -12,6 +12,50 @@ describe('Relations', () => {
 
   before(() => Promise.fromCallback(cb => cpx.copy('./data.json', './data/', cb)));
 
+  describe('hasManyAndBelongsToMany', () => {
+    it('Author should have two books', () => {
+      const query = gql `
+        {
+          node(id: "QXV0aG9yOjEw") {
+            ... on Author {
+              id
+              first_name
+              last_name
+              books(last: 1) {
+                totalCount
+                pageInfo {
+                  hasNextPage
+                  hasPreviousPage
+                  startCursor
+                  endCursor
+                }
+                edges {
+                  node {
+                    id
+                    name
+                  }
+                  cursor
+                }
+              }
+            }
+          }
+        }`;
+      return chai.request(server)
+                .post('/graphql')
+                .send({
+                  query
+                })
+                .then((res) => {
+                  expect(res).to.have.status(200);
+                  const result = res.body.data;
+                  expect(result.node.first_name).to.equal('Cool');
+                  expect(result.node.books.totalCount).to.equal(2);
+                  expect(result.node.books.edges.length).to.equal(1);
+                  expect(result.node.books.edges[0].node.name).to.equal('Lame Book');
+                });
+    });
+  });
+
   describe('hasMany', () => {
     it('should have one author and two notes', () => {
       const query = gql `
@@ -106,7 +150,7 @@ describe('Relations', () => {
                 .then((res) => {
                   expect(res).to.have.status(200);
                   const result = res.body.data;
-                  expect(result.viewer.books.edges.length).to.equal(1);
+                  expect(result.viewer.books.edges.length).to.equal(3);
                   expect(result.viewer.books.edges[0].node.name).to.equal('Book 1');
                   expect(result.viewer.books.edges[0].node.links.length).to.equal(2);
                 });

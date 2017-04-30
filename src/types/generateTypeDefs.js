@@ -1,12 +1,12 @@
 const _ = require('lodash');
 
 const {
-  connectionArgs,
-	connectionFromPromisedArray
+  connectionArgs
 } = require('graphql-relay');
 
 const GeoPointTypeDefs = require('./GeoPoint');
 const { findRelatedOne, findRelatedMany } = require('../db');
+const { connectionFromPromisedArray } = require('../db/resolveConnection');
 
 /** * Loopback Types - GraphQL types
         any - JSON

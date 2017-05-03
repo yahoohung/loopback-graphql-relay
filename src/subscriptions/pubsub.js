@@ -28,10 +28,20 @@ class PubSub {
       return Promise.reject(new Error('No related model found for this subscription'));
     }
 
-    const { create, update, remove: rmv } = options;
+    const { create, update, remove: rmv, options: opts } = options;
 
-    // Stream
-    model.createChangeStream((err, stream) => {
+    // Login
+    // return Promise.resolve().then(() => new Promise((resolve, reject) => {
+    //   model.checkAccess(context.accessToken, null, model.createChangeStream, null, (err, allowed) => {
+    //     if (err) {
+    //       reject(err);
+    //     }
+    //     resolve(allowed);
+    //   });
+    // })).then((result) => {
+
+      // Stream
+    model.createChangeStream(opts, (err, stream) => {
       // changes.pipe(es.stringify()).pipe(process.stdout);
 
       // Listeners
@@ -67,8 +77,9 @@ class PubSub {
       this.subscriptions[subId] = [stream, onMessage];
     });
 
-    // Packup
+      // Packup
     return Promise.resolve(subId);
+    // });
   }
 
   unsubscribe(subId) {

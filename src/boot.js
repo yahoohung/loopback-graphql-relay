@@ -26,5 +26,5 @@ module.exports = function(app, options) {
   }));
 
   // Subscriptions
-  startSubscriptionServer(models, schema, options);
+  startSubscriptionServer(app, schema, options);
 };

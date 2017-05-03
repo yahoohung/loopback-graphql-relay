@@ -39,9 +39,10 @@ const SubscriptionServer = require('./server');
 //   }).catch(err => console.log(`An error occured: ${err}`));
 // }
 
-module.exports = function startSubscriptionServer(models, schema, options) {
+module.exports = function startSubscriptionServer(app, schema, options) {
+  const models = app.models();
   const subscriptionManager = SubscriptionManager(models, schema, new PubSub());
-  SubscriptionServer(subscriptionManager, options);
+  SubscriptionServer(app, subscriptionManager, options);
 
   // test(subscriptionManager);
 };

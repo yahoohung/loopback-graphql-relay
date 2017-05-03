@@ -53,7 +53,7 @@ function getMeField(accessToken) {
           if (!req.accessToken) return null;
 
 
-          return app.models[accessToken.customAccessTokenModel].findById(req.accessToken, { include: accessToken.relation }).then( (obj, err) => {
+          return app.models[accessToken.customAccessTokenModel].findById(req.accessToken.id, { include: accessToken.relation }).then( (obj, err) => {
             if (!obj) return Promise.reject('Custom Access token not found');
 
             const accessToken = obj.toJSON();

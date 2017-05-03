@@ -28,7 +28,7 @@ class PubSub {
       return Promise.reject(new Error('No related model found for this subscription'));
     }
 
-    const { create, update, remove: rmv, options: opts, context } = options;
+    const { create, update, remove: rmv, options: opts } = options;
 
     // Login
     // return Promise.resolve().then(() => new Promise((resolve, reject) => {
@@ -41,44 +41,44 @@ class PubSub {
     // })).then((result) => {
 
       // Stream
-      model.createChangeStream(opts, (err, stream) => {
-        // changes.pipe(es.stringify()).pipe(process.stdout);
+    model.createChangeStream(opts, (err, stream) => {
+      // changes.pipe(es.stringify()).pipe(process.stdout);
 
-        // Listeners
-        stream.on('data', (data) => {
+      // Listeners
+      stream.on('data', (data) => {
 
-          switch (data.type) {
-            case 'create':
-              if (create) {
-                me.onUpdateMessage(subId, 'create', data);
-              }
-              break;
+        switch (data.type) {
+          case 'create':
+            if (create) {
+              me.onUpdateMessage(subId, 'create', data);
+            }
+            break;
 
-            case 'update':
-              if (update) {
-                me.onUpdateMessage(subId, 'update', data);
-              }
-              break;
+          case 'update':
+            if (update) {
+              me.onUpdateMessage(subId, 'update', data);
+            }
+            break;
 
-            case 'remove':
-              if (rmv) {
-                me.onUpdateMessage(subId, 'remove', data);
-              }
-              break;
+          case 'remove':
+            if (rmv) {
+              me.onUpdateMessage(subId, 'remove', data);
+            }
+            break;
 
-            default:
-              break;
-          }
-        });
-
-        stream.on('end', () => this.unsubscribe(subId));
-        stream.on('error', () => this.unsubscribe(subId));
-
-        this.subscriptions[subId] = [stream, onMessage];
+          default:
+            break;
+        }
       });
 
+      stream.on('end', () => this.unsubscribe(subId));
+      stream.on('error', () => this.unsubscribe(subId));
+
+      this.subscriptions[subId] = [stream, onMessage];
+    });
+
       // Packup
-      return Promise.resolve(subId);
+    return Promise.resolve(subId);
     // });
   }
 

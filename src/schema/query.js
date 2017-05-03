@@ -50,13 +50,15 @@ function getMeField(accessToken) {
         type: getType(accessToken.customUserModel),
         resolve: (obj, args, { app, req }) => {
 
-          if (!req.headers.accesstoken) return null;
+          if (!req.accessToken) return null;
 
 
-          return app.models[accessToken.customAccessTokenModel].findById(req.headers.accesstoken, { include: accessToken.relation }).then( (obj, err) => {
+          return app.models[accessToken.customAccessTokenModel].findById(req.accessToken, { include: accessToken.relation }).then( (obj, err) => {
+            if (!obj) return Promise.reject('Custom Access token not found');
+
             const accessToken = obj.toJSON();
             const user = accessToken.user;
-            if (!user) return Promise.reject('No user with this access token was found.');
+            if (!user) return Promise.reject('No Account with this access token was found.');
             return Promise.resolve(user);
           });
         }
@@ -68,9 +70,9 @@ function getMeField(accessToken) {
       type: getType('User'),
       resolve: (obj, args, { app, req }) => {
 
-        if (!req.headers.accesstoken) return null;
+        if (!req.accessToken) return null;
 
-        return app.models.User.findById(req.headers.accesstoken).then((user) => {
+        return app.models.User.findById(req.accessToken).then((user) => {
           user = user.toJSON();
           if (!user) return Promise.reject('No user with this access token was found.');
           return Promise.resolve(user);

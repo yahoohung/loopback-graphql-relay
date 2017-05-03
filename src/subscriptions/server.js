@@ -2,7 +2,7 @@ const { createServer } = require('http');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 
 
-module.exports = function(subscriptionManager, opts) {
+module.exports = function(app, subscriptionManager, opts) {
 
   const subscriptionOpts = opts.subscriptionServer || {};
 
@@ -28,8 +28,20 @@ module.exports = function(subscriptionManager, opts) {
   const server = new SubscriptionServer(
       Object.assign({}, {
         // onConnect: ({ accessToken }) => {
-        //   // Implement if you need to handle and manage connection
-        // TODO: Implement authentication, reference blog: https://dev-blog.apollodata.com/new-release-of-graphql-subscriptions-for-javascript-f11be19e6569#.l1yh2y1x1
+        //   return new Promise((resolve, reject) => {
+        //     app.loopback.AccessToken.findById(accessToken, (err, token) => {
+        //       if (err) {
+        //         reject(err);
+        //       }
+
+        //       if (!token) {
+        //         reject(new Error('Access denied!'));
+        //       }
+
+        //       return resolve({ accessToken: token });
+        //     });
+        //   });
+
         // },
         subscriptionManager
       }, options),

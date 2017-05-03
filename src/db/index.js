@@ -50,6 +50,44 @@ function findAll(model, obj, args, context) {
     });
 }
 
+function findAllRelated(model, obj, method, args, context) {
+  const response = {
+    args,
+    count: undefined,
+    first: undefined,
+    list: undefined,
+  };
+
+  return new Promise((resolve, reject) => {
+    waterfall([
+      function(callback) {
+        obj[`__count__${method}`](args.where, callback);
+      },
+      function(count, callback) {
+        response.count = count;
+
+        const idName = (model.getIdName && model.getIdName()) ? model.getIdName() : 'id';
+        obj[`__findOne__${method}`]({
+          order: idName + (args.before ? ' DESC' : ' ASC'),
+          where: args.where
+        }, callback);
+      },
+      function(first, callback) {
+        response.first = first;
+        obj[`__get__${method}`](buildFilter(model, Object.assign({}, args, { count: response.count })), callback);
+      }
+    ], (err, list) => {
+
+      if (err) {
+        return reject(err);
+      }
+      response.list = list;
+      return resolve(response);
+    });
+
+  });
+}
+
 function findAllViaThrough(rel, obj, args, context) {
   const response = {
     args,
@@ -118,5 +156,6 @@ module.exports = {
   findAll,
   findOne,
   findRelatedMany,
-  findRelatedOne
+  findRelatedOne,
+	findAllRelated
 };

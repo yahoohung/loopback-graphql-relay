@@ -8,7 +8,7 @@ const {
 
 const { GraphQLObjectType } = require('graphql');
 const { getType, getConnection } = require('../types/type');
-const { findAll } = require('../db');
+const { findAllRelated } = require('../db');
 const { connectionFromPromisedArray } = require('../db/resolveConnection');
 const getRemoteMethods = require('./utils/getRemoteMethods');
 
@@ -16,16 +16,14 @@ const getRemoteMethods = require('./utils/getRemoteMethods');
  *
  * @param {*} models
  */
-function getRelatedModelFields(models) {
+function getRelatedModelFields(User) {
   const fields = {};
+	
+  _.forEach(User.relations, (relation) => {
 
-  _.forEach(models, (model) => {
+		const model = relation.modelTo;
 
-    if (!model.shared) {
-      return;
-    }
-
-    fields[_.lowerFirst(model.pluralModelName)] = {
+    fields[_.lowerFirst(relation.name)] = {
       args: Object.assign({
         where: {
           type: getType('JSON')
@@ -35,13 +33,28 @@ function getRelatedModelFields(models) {
         },
       }, connectionArgs),
       type: getConnection(model.modelName),
-      resolve: (obj, args, context) => connectionFromPromisedArray(findAll(model, obj, args, context), args, model)
+      resolve: (obj, args, context) => {
+				
+				if (!context.req.accessToken) return null;
+
+				return getUserFromAccessToken(context.req.accessToken, User)
+					.then(user => connectionFromPromisedArray(findAllRelated(User, user, relation.name, args, context), args, model));
+			}
     };
   });
 
   return fields;
 }
 
+function getUserFromAccessToken(accessToken, UserModel) {
+
+  if (!accessToken) return null;
+
+	return UserModel.findById(accessToken.userId).then((user) => {
+		if (!user) return Promise.reject('No user with this access token was found.');
+		return Promise.resolve(user);
+	});
+}
 
 function getMeField(accessToken) {
   if (accessToken) {
@@ -88,6 +101,8 @@ function getMeField(accessToken) {
  */
 function generateViewer(models, accessToken) {
 
+	const User = _.find(models, model => model.modelName === 'Account');
+
   const Viewer = {
     resolve: (root, args, context) => ({}),
     type: new GraphQLObjectType({
@@ -96,7 +111,7 @@ function generateViewer(models, accessToken) {
       // interfaces: () => [nodeDefinitions.nodeInterface],
       fields: () => Object.assign({},
           getMeField(accessToken),
-          getRelatedModelFields(models)
+          getRelatedModelFields(User)
         )
     })
   };

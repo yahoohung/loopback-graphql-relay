@@ -8,7 +8,7 @@ const {
 
 const { GraphQLObjectType } = require('graphql');
 const { getType, getConnection } = require('../types/type');
-const { findAll } = require('../db');
+const { findAllRelated } = require('../db');
 const { connectionFromPromisedArray } = require('../db/resolveConnection');
 const getRemoteMethods = require('./utils/getRemoteMethods');
 
@@ -16,16 +16,14 @@ const getRemoteMethods = require('./utils/getRemoteMethods');
  *
  * @param {*} models
  */
-function getRelatedModelFields(models) {
+function getRelatedModelFields(User) {
   const fields = {};
+	
+  _.forEach(User.relations, (relation) => {
 
-  _.forEach(models, (model) => {
+		const model = relation.modelTo;
 
-    if (!model.shared) {
-      return;
-    }
-
-    fields[_.lowerFirst(model.pluralModelName)] = {
+    fields[_.lowerFirst(relation.name)] = {
       args: Object.assign({
         where: {
           type: getType('JSON')
@@ -35,25 +33,44 @@ function getRelatedModelFields(models) {
         },
       }, connectionArgs),
       type: getConnection(model.modelName),
-      resolve: (obj, args, context) => connectionFromPromisedArray(findAll(model, obj, args, context), args, model)
+      resolve: (obj, args, context) => {
+				
+				if (!context.req.accessToken) return null;
+
+				return getUserFromAccessToken(context.req.accessToken, User)
+					.then(user => connectionFromPromisedArray(findAllRelated(User, user, relation.name, args, context), args, model));
+			}
     };
   });
 
   return fields;
 }
 
+function getUserFromAccessToken(accessToken, UserModel) {
 
-function getMeField(userModelName) {
-  if (userModelName) {
+  if (!accessToken) return null;
+
+	return UserModel.findById(accessToken.userId).then((user) => {
+		if (!user) return Promise.reject('No user with this access token was found.');
+		return Promise.resolve(user);
+	});
+}
+
+function getMeField(accessToken) {
+  if (accessToken) {
     return {
       me: {
-        type: getType(userModelName),
+        type: getType(accessToken.customUserModel),
         resolve: (obj, args, { app, req }) => {
 
-          if (!req.headers.accesstoken) return null;
+          if (!req.accessToken) return null;
 
-          return app.models[userModelName].findById(req.headers.accesstoken).then((user) => {
-            user = user.toJSON();
+
+          return app.models[accessToken.customAccessTokenModel].findById(req.accessToken.id, { include: accessToken.relation }).then( (obj, err) => {
+            if (!obj) return Promise.reject('Custom Access token not found');
+
+            const accessToken = obj.toJSON();
+            const user = accessToken.user;
             if (!user) return Promise.reject('No Account with this access token was found.');
             return Promise.resolve(user);
           });
@@ -66,9 +83,9 @@ function getMeField(userModelName) {
       type: getType('User'),
       resolve: (obj, args, { app, req }) => {
 
-        if (!req.headers.accesstoken) return null;
+        if (!req.accessToken) return null;
 
-        return app.models.User.findById(req.headers.accesstoken).then((user) => {
+        return app.models.User.findById(req.accessToken).then((user) => {
           user = user.toJSON();
           if (!user) return Promise.reject('No user with this access token was found.');
           return Promise.resolve(user);
@@ -82,7 +99,9 @@ function getMeField(userModelName) {
  * Generates Viewer query
  * @param {*} models
  */
-function generateViewer(models, userModelName) {
+function generateViewer(models, accessToken) {
+
+	const User = _.find(models, model => model.modelName === 'Account');
 
   const Viewer = {
     resolve: (root, args, context) => ({}),
@@ -91,8 +110,8 @@ function generateViewer(models, userModelName) {
       description: 'Viewer',
       // interfaces: () => [nodeDefinitions.nodeInterface],
       fields: () => Object.assign({},
-          getMeField(userModelName),
-          getRelatedModelFields(models)
+          getMeField(accessToken),
+          getRelatedModelFields(User)
         )
     })
   };
@@ -128,12 +147,12 @@ function generateModelFields(models) {
   return modelFields;
 }
 
-module.exports = function(models, userModelName) {
+module.exports = function(models, accessToken) {
 
   const fields = Object.assign({},
     {
       node: getType('node'),
-      viewer: generateViewer(models, userModelName)
+      viewer: generateViewer(models, accessToken)
     },
     generateModelFields(models)
   );

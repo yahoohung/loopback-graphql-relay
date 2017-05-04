@@ -85,11 +85,11 @@ function getMeField(User) {
  */
 module.exports = function(models, options) {
 
-  const opts = Object.assign({}, options.viewer || {}, {
+  const opts = Object.assign({}, {
     AccessTokenModel: 'AccessToken',
     relation: 'user',
     UserModel: 'User'
-  });
+  }, options.viewer || {});
 
   const User = _.find(models, model => model.modelName === opts.UserModel);
 

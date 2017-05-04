@@ -9,7 +9,7 @@ const {
 const promisify = require('promisify-node');
 
 const utils = require('../utils');
-const { getType } = require('../../types/type');
+// const { getType } = require('../../types/type');
 
 const allowedVerbs = ['post', 'del', 'put', 'patch', 'all'];
 

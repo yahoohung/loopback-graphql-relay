@@ -2,10 +2,6 @@
 
 const _ = require('lodash');
 
-const {
-	connectionArgs
-} = require('graphql-relay');
-
 const { GraphQLObjectType } = require('graphql');
 const { getType } = require('../../types/type');
 const getRemoteMethodQueries = require('./getRemoteMethodQueries');

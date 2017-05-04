@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 
-const { getType, getConnection } = require('../../types/type');
+const { getType } = require('../../types/type');
 const { SCALARS } = require('../../types/generateTypeDefs');
 
 const exchangeTypes = {

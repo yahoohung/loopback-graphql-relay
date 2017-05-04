@@ -17,9 +17,9 @@ describe('Mutations', () => {
 
   it('should add a single entity', () => {
     const query = gql `
-      mutation save($obj: AuthorInput!) {
+      mutation save($data: AuthorCreateInput!) {
         Author {
-          AuthorSave(input: {obj: $obj}) {
+          AuthorCreate(input: {data: $data}) {
             obj {
               first_name
               last_name
@@ -29,7 +29,7 @@ describe('Mutations', () => {
         }
       }`;
     const variables = {
-      obj: {
+      data: {
         first_name: 'Unit Test',
         last_name: 'Author',
         birth_date: new Date()
@@ -50,9 +50,9 @@ describe('Mutations', () => {
   it('should add a single entity with sub type', () => {
     const body = 'Heckelbery Finn';
     const query = gql `
-      mutation save($obj: NoteInput!) {
+      mutation save($data: NoteCreateInput!) {
         Note {
-          NoteSave(input: {obj: $obj}) {
+          NoteCreate(input: $data) {
             obj {
               id
               title
@@ -68,8 +68,8 @@ describe('Mutations', () => {
         }
       }
         `;
-    const variables = {
-      obj: {
+    const variables = JSON.stringify({
+      data: {
         title: 'Heckelbery Finn',
         authorId: 8,
         content: {
@@ -77,7 +77,7 @@ describe('Mutations', () => {
           footer: 'The end'
         }
       }
-    };
+    });
 
     return chai.request(server)
             .post('/graphql')
@@ -95,7 +95,7 @@ describe('Mutations', () => {
     const query = gql `
       mutation delete($id: ID!) {
         Author {
-          AuthorDelete(input: {id: $id}) {
+          AuthorDeleteById(input: {id: $id}) {
             clientMutationId
           }
         }

@@ -41,7 +41,7 @@
   },
   "Account": {
     "dataSource": "db",
-    "public": false
+    "public": true
   },
   "Author": {
     "dataSource": "db",
@@ -82,5 +82,13 @@
   "catalogs": {
     "dataSource": "db",
     "public": true
+  },
+  "Site": {
+    "dataSource": "db",
+    "public": true
+  },
+  "CustomAccessToken": {
+    "dataSource": "db",
+    "public": false
   }
 }

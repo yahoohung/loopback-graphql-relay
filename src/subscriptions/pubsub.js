@@ -7,7 +7,8 @@ class PubSub {
     this.subscriptions = {};
     this.subIdCounter = 0;
 
-    this.onUpdateMessage = this.onMessage.bind(this);
+    this.onMessage = this.onMessage.bind(this);
+    this.onUpdateMessage = this.onUpdateMessage.bind(this);
   }
 
   publish(triggerName, payload) { // eslint-disable-line class-methods-use-this
@@ -50,19 +51,19 @@ class PubSub {
         switch (data.type) {
           case 'create':
             if (create) {
-              me.onUpdateMessage(subId, 'create', data);
+              me.onMessage(subId, 'create', data);
             }
             break;
 
           case 'update':
             if (update) {
-              me.onUpdateMessage(subId, 'update', data);
+              me.onUpdateMessage(subId, 'update', data, model);
             }
             break;
 
           case 'remove':
             if (rmv) {
-              me.onUpdateMessage(subId, 'remove', data);
+              me.onMessage(subId, 'remove', data);
             }
             break;
 
@@ -77,7 +78,6 @@ class PubSub {
       this.subscriptions[subId] = [stream, onMessage];
     });
 
-      // Packup
     return Promise.resolve(subId);
     // });
   }
@@ -108,6 +108,26 @@ class PubSub {
     } catch (e) {
       // logger.info(new Error('An error occured while try to broadcast subscription.'));
     }
+  }
+
+  onUpdateMessage(subId, event, object, model) {
+
+    model.findById(object.target).then((obj) => {
+
+      const payload = {
+        subscriptionId: subId,
+        event,
+        object: { data: obj }
+      };
+
+      try {
+        this.subscriptions[subId][1](payload);
+      // logger.info('subscription sent', payload);
+      } catch (e) {
+      // logger.info(new Error('An error occured while try to broadcast subscription.'));
+      }
+    });
+
   }
 }
 

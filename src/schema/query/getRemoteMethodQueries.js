@@ -30,18 +30,13 @@ module.exports = function getRemoteMethodQueries(model) {
 
         const type = getType(`${utils.exchangeTypes[returnType] || returnType}`) || getType('JSON');
 
-        hooks[hookName] = mutationWithClientMutationId({
+        hooks[hookName] = {
           name: hookName,
           description: method.description,
           meta: { relation: true },
-          inputFields: acceptingParams,
-          outputFields: {
-            obj: {
-              type,
-              resolve: o => o.obj
-            },
-          },
-          mutateAndGetPayload: (args) => {
+          args: acceptingParams,
+          type,
+          resolve: (_, args, context, info) => {
             const params = [];
 
             _.forEach(acceptingParams, (param, name) => {
@@ -50,7 +45,7 @@ module.exports = function getRemoteMethodQueries(model) {
             const wrap = promisify(model[method.name]);
             return wrap.apply(model, params).then(data => ({ obj: data }));
           }
-        });
+        };
       }
     });
   }

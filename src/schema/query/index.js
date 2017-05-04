@@ -24,7 +24,7 @@ function generateModelFields(models) {
       return;
     }
 
-    modelFields[_.upperFirst(model.modelName)] = {
+    modelFields[model.modelName] = {
       resolve: (root, args, context) => ({}),
       type: new GraphQLObjectType({
         name: `${model.modelName}Queries`,

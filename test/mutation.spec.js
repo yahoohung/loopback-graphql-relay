@@ -17,7 +17,7 @@ describe('Mutations', () => {
 
   it('should add a single entity', () => {
     const query = gql `
-      mutation save($data: AuthorCreateInput!) {
+      mutation save($data: JSON!) {
         Author {
           AuthorCreate(input: {data: $data}) {
             obj {
@@ -44,15 +44,19 @@ describe('Mutations', () => {
             })
             .then((res) => {
               expect(res).to.have.status(200);
+              const result = res.body.data;
+              expect(result.Author.AuthorCreate.obj.first_name).to.equal(variables.data.first_name);
+              expect(result.Author.AuthorCreate.obj.last_name).to.equal(variables.data.last_name);
+              // expect(Date.parse(result.Author.AuthorCreate.obj.birth_date)).to.equal(variables.data.birth_date);
             });
   });
 
   it('should add a single entity with sub type', () => {
     const body = 'Heckelbery Finn';
     const query = gql `
-      mutation save($data: NoteCreateInput!) {
+      mutation save($data: JSON!) {
         Note {
-          NoteCreate(input: $data) {
+          NoteCreate(input: { data: $data }) {
             obj {
               id
               title
@@ -66,8 +70,7 @@ describe('Mutations', () => {
             }
           }
         }
-      }
-        `;
+      }`;
     const variables = {
       data: {
         title: 'Heckelbery Finn',
@@ -87,7 +90,10 @@ describe('Mutations', () => {
             })
             .then((res) => {
               expect(res).to.have.status(200);
-              expect(res.body.data.Note.NoteSave.obj.content.body).to.equal(body);
+              const result = res.body.data;
+              expect(result.Note.NoteCreate.obj.content.body).to.equal(body);
+              expect(result.Note.NoteCreate.obj.author.first_name).to.equal('Jane');
+              expect(result.Note.NoteCreate.obj.author.last_name).to.equal('Austin');
             });
   });
 

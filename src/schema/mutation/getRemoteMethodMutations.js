@@ -25,6 +25,11 @@ module.exports = function getRemoteMethodMutations(model) {
           return;
         }
 
+        // TODO: Add support for static methods
+        if (method.isStatic === false) {
+          return;
+        }
+
         const typeObj = utils.getRemoteMethodOutput(method);
         const acceptingParams = utils.getRemoteMethodInput(method, typeObj.list);
         const hookName = utils.getRemoteMethodQueryName(model, method);

@@ -157,5 +157,5 @@ module.exports = {
   findOne,
   findRelatedMany,
   findRelatedOne,
-	findAllRelated
+  findAllRelated
 };

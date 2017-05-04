@@ -1,8 +1,9 @@
 'use strict';
 
 const _ = require('lodash');
+const { connectionArgs } = require('graphql-relay');
 
-const { getType } = require('../../types/type');
+const { getType, getConnection } = require('../../types/type');
 const { SCALARS } = require('../../types/generateTypeDefs');
 
 const exchangeTypes = {
@@ -49,7 +50,7 @@ function isRemoteMethodAllowed(method, allowedVerbs) {
  * Extracts query params from a remote method
  * @param {*} method
  */
-function getRemoteMethodInput(method) {
+function getRemoteMethodInput(method, isConnection = false) {
   const acceptingParams = {};
 
   method.accepts.forEach((param) => {
@@ -68,7 +69,7 @@ function getRemoteMethodInput(method) {
     }
   });
 
-  return acceptingParams;
+  return (isConnection) ? Object.assign({}, acceptingParams, connectionArgs) : acceptingParams;
 }
 
 /**
@@ -77,22 +78,48 @@ function getRemoteMethodInput(method) {
  */
 function getRemoteMethodOutput(method) {
 
+  // let returnType = 'JSON';
+
+  // if (method.returns && method.returns[0]) {
+  //   if (!SCALARS[method.returns[0].type] && typeof method.returns[0].type !== 'object') {
+  //     returnType = `${method.returns[0].type}`;
+  //   } else {
+  //     returnType = `${_.upperFirst(method.returns[0].type)}`;
+  //     if (typeof method.returns[0].type === 'object') {
+  //       returnType = 'JSON';
+  //     }
+  //   }
+  // }
+
+  // const type = exchangeTypes[returnType] || returnType;
+
+  // return getType(type) || getType('JSON');
+
   let returnType = 'JSON';
+  let list = false;
 
   if (method.returns && method.returns[0]) {
     if (!SCALARS[method.returns[0].type] && typeof method.returns[0].type !== 'object') {
       returnType = `${method.returns[0].type}`;
     } else {
-      returnType = `${_.upperFirst(method.returns[0].type)}`;
-      if (typeof method.returns[0].type === 'object') {
+      returnType = `${method.returns[0].type}`;
+      if (_.isArray(method.returns[0].type) && _.isString(method.returns[0].type[0])) {
+        returnType = method.returns[0].type[0];
+        list = true;
+      } else if (typeof method.returns[0].type === 'object') {
         returnType = 'JSON';
       }
     }
   }
 
-  const type = exchangeTypes[returnType] || returnType;
+  let type = exchangeTypes[returnType] || returnType;
+  type = (list) ? getConnection(type) : getType(type);
+  type = type || getType('JSON');
 
-  return getType(type) || getType('JSON');
+  return {
+    type,
+    list
+  };
 }
 
 /**

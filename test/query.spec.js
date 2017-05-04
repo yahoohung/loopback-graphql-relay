@@ -131,6 +131,26 @@ describe('Queries', () => {
             });
   });
 
+  it('should return current logged in user', () => {
+    const query = gql `
+      {
+        viewer {
+          me { id username email }
+        }
+      }`;
+    return chai.request(server)
+            .post('/graphql')
+            .set('Authorization', 'aOFdthBV4eoid5AFmuQpkaTo9FmFwYvMMbRn474O6VrT16vDMI4WxdBrtf1qHkBD')
+            .send({
+              query
+            })
+            .then((res) => {
+              expect(res).to.have.status(200);
+              expect(res.body.data.viewer.me.username).to.equal('naveenmeher');
+              expect(res.body.data.viewer.me.email).to.equal('naveenmeher07@gmail.com');
+            });
+  });
+
   describe('Remote hooks', () => {
 
     it('count', () => {
@@ -215,6 +235,32 @@ describe('Queries', () => {
                 expect(res).to.have.status(200);
                 expect(res.body.data.Author.AuthorFindById.first_name).to.equal('Virginia');
                 expect(res.body.data.Author.AuthorFindById.last_name).to.equal('Wolf');
+              });
+    });
+
+
+    it('find', () => {
+      const query = gql `
+        {
+          Book {
+            BookFind {
+              edges {
+                node {
+                  id
+                  name
+                }
+              }
+            }
+          }
+        }`;
+      return chai.request(server)
+              .post('/graphql')
+              .send({
+                query
+              })
+              .then((res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.data.Book.BookFind.edges.length).to.be.above(2);
               });
     });
 

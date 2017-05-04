@@ -5,7 +5,7 @@ const _ = require('lodash');
 const promisify = require('promisify-node');
 
 const utils = require('../utils');
-
+const { connectionFromPromisedArray } = require('graphql-relay');
 const allowedVerbs = ['get', 'head'];
 
 module.exports = function getRemoteMethodQueries(model) {
@@ -19,8 +19,8 @@ module.exports = function getRemoteMethodQueries(model) {
           return;
         }
 
-        const acceptingParams = utils.getRemoteMethodInput(method);
-        const type = utils.getRemoteMethodOutput(method);
+        const typeObj = utils.getRemoteMethodOutput(method);
+        const acceptingParams = utils.getRemoteMethodInput(method, typeObj.list);
         const hookName = utils.getRemoteMethodQueryName(model, method);
 
         hooks[hookName] = {
@@ -28,7 +28,7 @@ module.exports = function getRemoteMethodQueries(model) {
           description: method.description,
           meta: { relation: true },
           args: acceptingParams,
-          type,
+          type: typeObj.type,
           resolve: (__, args, context, info) => {
             const params = [];
 
@@ -36,6 +36,11 @@ module.exports = function getRemoteMethodQueries(model) {
               params.push(args[name]);
             });
             const wrap = promisify(model[method.name]);
+
+            if (typeObj.list) {
+              return connectionFromPromisedArray(wrap.apply(model, params), args, model);
+            }
+
             return wrap.apply(model, params);
           }
         };

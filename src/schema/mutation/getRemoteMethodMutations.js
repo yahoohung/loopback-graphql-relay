@@ -7,6 +7,7 @@ const {
 } = require('graphql-relay');
 
 const promisify = require('promisify-node');
+const { connectionFromPromisedArray } = require('graphql-relay');
 
 const utils = require('../utils');
 // const { getType } = require('../../types/type');
@@ -24,8 +25,8 @@ module.exports = function getRemoteMethodMutations(model) {
           return;
         }
 
-        const acceptingParams = utils.getRemoteMethodInput(method);
-        const type = utils.getRemoteMethodOutput(method);
+        const typeObj = utils.getRemoteMethodOutput(method);
+        const acceptingParams = utils.getRemoteMethodInput(method, typeObj.list);
         const hookName = utils.getRemoteMethodQueryName(model, method);
 
         hooks[hookName] = mutationWithClientMutationId({
@@ -35,7 +36,7 @@ module.exports = function getRemoteMethodMutations(model) {
           inputFields: acceptingParams,
           outputFields: {
             obj: {
-              type,
+              type: typeObj.type,
               resolve: o => o.obj
             },
           },
@@ -46,7 +47,12 @@ module.exports = function getRemoteMethodMutations(model) {
               params.push(args[name]);
             });
             const wrap = promisify(model[method.name]);
-            return wrap.apply(model, params).then(data => ({ obj: data }));
+
+            if (typeObj.list) {
+              return connectionFromPromisedArray(wrap.apply(model, params), args, model);
+            }
+
+            return wrap.apply(model, params);
           }
         });
       }

@@ -37,7 +37,7 @@ module.exports = function getRemoteMethodMutations(model) {
           outputFields: {
             obj: {
               type: typeObj.type,
-              resolve: o => o.obj
+              resolve: o => o
             },
           },
           mutateAndGetPayload: (args) => {

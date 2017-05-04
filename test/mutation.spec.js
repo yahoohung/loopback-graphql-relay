@@ -68,7 +68,7 @@ describe('Mutations', () => {
         }
       }
         `;
-    const variables = JSON.stringify({
+    const variables = {
       data: {
         title: 'Heckelbery Finn',
         authorId: 8,
@@ -77,7 +77,7 @@ describe('Mutations', () => {
           footer: 'The end'
         }
       }
-    });
+    };
 
     return chai.request(server)
             .post('/graphql')

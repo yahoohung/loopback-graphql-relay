@@ -25,10 +25,8 @@ module.exports = function getRemoteMethodMutations(model) {
         }
 
         const acceptingParams = utils.getRemoteMethodInput(method);
-        const returnType = utils.getRemoteMethodOutput(method);
+        const type = utils.getRemoteMethodOutput(method);
         const hookName = utils.getRemoteMethodQueryName(model, method);
-
-        const type = getType(`${utils.exchangeTypes[returnType] || returnType}`) || getType('JSON');
 
         hooks[hookName] = mutationWithClientMutationId({
           name: hookName,

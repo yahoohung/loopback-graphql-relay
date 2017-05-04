@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 
-const { getType } = require('../../types/type');
+const { getType, getConnection } = require('../../types/type');
 const { SCALARS } = require('../../types/generateTypeDefs');
 
 const exchangeTypes = {
@@ -10,8 +10,10 @@ const exchangeTypes = {
   Any: 'JSON',
   Number: 'Int',
   number: 'Int',
+  boolean: 'Boolean',
   Object: 'JSON',
-  object: 'JSON'
+  object: 'JSON',
+  PersistedModel: 'JSON'
 };
 
 /**
@@ -88,7 +90,9 @@ function getRemoteMethodOutput(method) {
     }
   }
 
-  return returnType;
+  const type = exchangeTypes[returnType] || returnType;
+
+  return getType(type) || getType('JSON');
 }
 
 /**

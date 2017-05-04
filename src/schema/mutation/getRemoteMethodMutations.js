@@ -11,7 +11,7 @@ const promisify = require('promisify-node');
 const utils = require('../utils');
 const { getType } = require('../../types/type');
 
-const allowedVerbs = ['post', 'delete', 'put', 'patch', 'all'];
+const allowedVerbs = ['post', 'del', 'put', 'patch', 'all'];
 
 module.exports = function getRemoteMethodMutations(model) {
   const hooks = {};

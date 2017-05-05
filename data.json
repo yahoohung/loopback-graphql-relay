@@ -5,7 +5,7 @@
     "ACL": 1,
     "RoleMapping": 1,
     "Role": 1,
-    "Note": 23,
+    "Note": 8,
     "Author": 20,
     "Reader": 2,
     "Book": 6,
@@ -64,22 +64,7 @@
       "4": "{\"title\":\"The Bluest Eye\",\"authorId\":5,\"id\":4}",
       "5": "{\"title\":\"Of Mice and Men\",\"Genre\":\"HUMOR\",\"authorId\":4,\"id\":5}",
       "6": "{\"title\":\"Love and Prejudice\",\"authorId\":8,\"Genre\":\"ROMANCE\",\"id\":6}",
-      "7": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":7}",
-      "8": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":8}",
-      "9": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":9}",
-      "10": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":10}",
-      "11": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":11}",
-      "12": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":12}",
-      "13": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":13}",
-      "14": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":14}",
-      "15": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":15}",
-      "16": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":16}",
-      "17": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":17}",
-      "18": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":18}",
-      "19": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":19}",
-      "20": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":20}",
-      "21": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":21}",
-      "22": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":22}"
+      "7": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":7}"
     },
     "Author": {
       "1": "{\"first_name\":\"Jane\",\"last_name\":\"Austin\",\"birth_date\":\"1883-10-15T00:00:00.000Z\",\"id\":8,\"friendIds\":[5,7]}",
@@ -89,16 +74,7 @@
       "7": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2017-04-27T07:17:26.925Z\",\"friendIds\":[],\"id\":7}",
       "8": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2017-04-27T13:22:02.604Z\",\"friendIds\":[],\"id\":8}",
       "9": "{\"first_name\":\"Virginia\",\"last_name\":\"Wolf\",\"birth_date\":\"2017-04-27T13:25:59.516Z\",\"friendIds\":[],\"id\":9}",
-      "10": "{\"first_name\":\"Cool\",\"last_name\":\"Man\",\"birth_date\":\"2017-04-30T08:58:17.742Z\",\"friendIds\":[],\"id\":10}",
-      "11": "{\"first_name\":\"Unit Test\",\"last_name\":\"Author\",\"birth_date\":\"2017-05-04T18:24:48.060Z\",\"friendIds\":[],\"id\":11}",
-      "12": "{\"first_name\":\"Unit Test\",\"last_name\":\"Author\",\"birth_date\":\"2017-05-04T18:25:35.882Z\",\"friendIds\":[],\"id\":12}",
-      "13": "{\"first_name\":\"Unit Test\",\"last_name\":\"Author\",\"birth_date\":\"2017-05-05T15:03:16.033Z\",\"friendIds\":[],\"id\":13}",
-      "14": "{\"first_name\":\"Unit Test\",\"last_name\":\"Author\",\"birth_date\":\"2017-05-05T15:04:30.523Z\",\"friendIds\":[],\"id\":14}",
-      "15": "{\"first_name\":\"Unit Test\",\"last_name\":\"Author\",\"birth_date\":\"2017-05-05T15:05:20.723Z\",\"friendIds\":[],\"id\":15}",
-      "16": "{\"first_name\":\"Unit Test\",\"last_name\":\"Author\",\"birth_date\":\"2017-05-05T15:06:15.264Z\",\"friendIds\":[],\"id\":16}",
-      "17": "{\"first_name\":\"Unit Test\",\"last_name\":\"Author\",\"birth_date\":\"2017-05-05T15:07:16.070Z\",\"friendIds\":[],\"id\":17}",
-      "18": "{\"first_name\":\"Unit Test\",\"last_name\":\"Author\",\"birth_date\":\"2017-05-05T15:07:19.784Z\",\"friendIds\":[],\"id\":18}",
-      "19": "{\"first_name\":\"Unit Test\",\"last_name\":\"Author\",\"birth_date\":\"2017-05-05T15:07:25.332Z\",\"friendIds\":[],\"id\":19}"
+      "10": "{\"first_name\":\"Cool\",\"last_name\":\"Man\",\"birth_date\":\"2017-04-30T08:58:17.742Z\",\"friendIds\":[],\"id\":10}"
     },
     "Reader": {
       "1": "{\"name\":\"Reader 1\",\"id\":1}"

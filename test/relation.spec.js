@@ -12,6 +12,43 @@ describe('Relations', () => {
 
   before(() => Promise.fromCallback(cb => cpx.copy('./data.json', './data/', cb)));
 
+  it('should query related entity with nested relational data', () => {
+    const query = gql `
+              {
+                Customer {
+                  CustomerFind(first: 2) {
+                    edges {
+                      node {
+                        name
+                        age
+                        orders {
+                          edges {
+                            node {
+                              date
+                              description
+                              customer {
+                                name
+                                age
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }`;
+    return chai.request(server)
+              .post('/graphql')
+              .send({
+                query
+              })
+              .then((res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.data.Customer.CustomerFind.edges.length).to.equal(2);
+              });
+  });
+
   describe('hasManyAndBelongsToMany', () => {
     it('Author should have two books', () => {
       const query = gql `

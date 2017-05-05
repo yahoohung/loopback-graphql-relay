@@ -13,7 +13,13 @@
     }
   },
   "session": {},
-  "auth": {},
+  "auth": {
+    "loopback#token": {
+      "params": {
+        "model": "CustomAccessToken"
+      }
+    }
+  },
   "parse": {},
   "routes:before": {
     "loopback#rest": {

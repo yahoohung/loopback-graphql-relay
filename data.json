@@ -1,21 +1,24 @@
 {
   "ids": {
     "User": 3,
-    "AccessToken": 10,
+    "AccessToken": 20,
     "ACL": 1,
     "RoleMapping": 1,
     "Role": 1,
-    "Note": 14,
-    "Author": 11,
+    "Note": 8,
+    "Author": 20,
     "Reader": 2,
-    "Book": 4,
+    "Book": 6,
     "BookAuthor": 3,
+    "SiteBook": 3,
     "Customer": 8,
     "Address": 1,
     "EmailAddress": 1,
-    "Account": 3,
+    "Account": 5,
     "Order": 6,
-    "Googlemaps": 2
+    "Googlemaps": 2,
+    "CustomAccessToken": 4,
+    "Site": 5
   },
   "models": {
     "User": {
@@ -31,7 +34,17 @@
       "k7calYGDFHwUXylaCgyJsEYZeTQTHbHSHfk1curZPn4jk680TKFX0alI9Ekxa8DW": "{\"id\":\"k7calYGDFHwUXylaCgyJsEYZeTQTHbHSHfk1curZPn4jk680TKFX0alI9Ekxa8DW\",\"ttl\":1209600,\"created\":\"2017-04-27T13:21:00.511Z\",\"userId\":2}",
       "DteA2F234qVcASQgkK4R7IICPXRfC9D1xYqXFvxvuECBAH0kEToaUEtShayvWm6i": "{\"id\":\"DteA2F234qVcASQgkK4R7IICPXRfC9D1xYqXFvxvuECBAH0kEToaUEtShayvWm6i\",\"ttl\":1209600,\"created\":\"2017-04-27T13:21:28.459Z\",\"userId\":2}",
       "h95GD9vSVn55xCs0i3IPhl6G4ULJ45KAouEvh14bwD8nJBgbf890UlHt8CUfEotH": "{\"id\":\"h95GD9vSVn55xCs0i3IPhl6G4ULJ45KAouEvh14bwD8nJBgbf890UlHt8CUfEotH\",\"ttl\":1209600,\"created\":\"2017-04-27T13:22:02.784Z\",\"userId\":2}",
-      "aOFdthBV4eoid5AFmuQpkaTo9FmFwYvMMbRn474O6VrT16vDMI4WxdBrtf1qHkBD": "{\"id\":\"aOFdthBV4eoid5AFmuQpkaTo9FmFwYvMMbRn474O6VrT16vDMI4WxdBrtf1qHkBD\",\"ttl\":1209600,\"created\":\"2017-04-27T13:25:59.705Z\",\"userId\":2}"
+      "aOFdthBV4eoid5AFmuQpkaTo9FmFwYvMMbRn474O6VrT16vDMI4WxdBrtf1qHkBD": "{\"id\":\"aOFdthBV4eoid5AFmuQpkaTo9FmFwYvMMbRn474O6VrT16vDMI4WxdBrtf1qHkBD\",\"ttl\":1209600,\"created\":\"2017-04-27T13:25:59.705Z\",\"userId\":2}",
+      "ZXGLNjJtvrfTbJ1wjSqOQ6Z1COp708CCkmGiPNbUc6e3oOHgziRkjxKdKtkrLicZ": "{\"id\":\"ZXGLNjJtvrfTbJ1wjSqOQ6Z1COp708CCkmGiPNbUc6e3oOHgziRkjxKdKtkrLicZ\",\"ttl\":1209600,\"created\":\"2017-05-04T18:03:58.045Z\",\"userId\":2}",
+      "a9qsQhwSApKwUKyaRRsnEvogENWq657NrcFOvB3UFPzCfSBXf8rA1dLIUE36WVB9": "{\"id\":\"a9qsQhwSApKwUKyaRRsnEvogENWq657NrcFOvB3UFPzCfSBXf8rA1dLIUE36WVB9\",\"ttl\":1209600,\"created\":\"2017-05-04T18:24:48.374Z\",\"userId\":2}",
+      "bx4E5sjyyyduVlHXuQOY8c7ZmAo7eWmMHqYhpZoiXN0goLGsBNS2TH5bDWgECOii": "{\"id\":\"bx4E5sjyyyduVlHXuQOY8c7ZmAo7eWmMHqYhpZoiXN0goLGsBNS2TH5bDWgECOii\",\"ttl\":1209600,\"created\":\"2017-05-04T18:25:36.160Z\",\"userId\":2}",
+      "tylGdVDrFQ8clHozPklc8N0sgBAWr2xTokXc6wIiLj0FfEEW9xfPPKZuHfID9Mvf": "{\"id\":\"tylGdVDrFQ8clHozPklc8N0sgBAWr2xTokXc6wIiLj0FfEEW9xfPPKZuHfID9Mvf\",\"ttl\":1209600,\"created\":\"2017-05-05T15:03:16.281Z\",\"userId\":2}",
+      "dUFU9MisthmCN0Zq3mhcwveI1wfsumK93UXAyibjpCnJV5RFR12QQEeStozQgVRP": "{\"id\":\"dUFU9MisthmCN0Zq3mhcwveI1wfsumK93UXAyibjpCnJV5RFR12QQEeStozQgVRP\",\"ttl\":1209600,\"created\":\"2017-05-05T15:04:30.663Z\",\"userId\":2}",
+      "H36qqfBG8S3zKhPOYTXyVKIP2Ddga2KHeTP2dOTTcng3MlDBMBepmAqYFYjKBTCA": "{\"id\":\"H36qqfBG8S3zKhPOYTXyVKIP2Ddga2KHeTP2dOTTcng3MlDBMBepmAqYFYjKBTCA\",\"ttl\":1209600,\"created\":\"2017-05-05T15:05:20.872Z\",\"userId\":2}",
+      "a6hg0QQq1ZUfRQqyoFmUvuE8uhbk1HsUEa71oyMj8AjADFoHtD3H4vTuyv6tRbfL": "{\"id\":\"a6hg0QQq1ZUfRQqyoFmUvuE8uhbk1HsUEa71oyMj8AjADFoHtD3H4vTuyv6tRbfL\",\"ttl\":1209600,\"created\":\"2017-05-05T15:06:15.431Z\",\"userId\":2}",
+      "IpCpYrkfgsSC0CdI4joCl3fj7Pd3w7JCHpLsHpIVP0z33U5K7oSYySkdfTUIG7To": "{\"id\":\"IpCpYrkfgsSC0CdI4joCl3fj7Pd3w7JCHpLsHpIVP0z33U5K7oSYySkdfTUIG7To\",\"ttl\":1209600,\"created\":\"2017-05-05T15:07:16.222Z\",\"userId\":2}",
+      "jXWWmlTx7Fw6N8gR9iiKsO5lwPtn4oV0leZ5H7MMm0Wcydt0w2uECUx5A7obHZQ9": "{\"id\":\"jXWWmlTx7Fw6N8gR9iiKsO5lwPtn4oV0leZ5H7MMm0Wcydt0w2uECUx5A7obHZQ9\",\"ttl\":1209600,\"created\":\"2017-05-05T15:07:19.934Z\",\"userId\":2}",
+      "NeeJyRh2FUW7sA6ridzZ4HcXq9HECWeBWczz4jE7XzkFnTWg9LJPKUO4DvVG6q8Y": "{\"id\":\"NeeJyRh2FUW7sA6ridzZ4HcXq9HECWeBWczz4jE7XzkFnTWg9LJPKUO4DvVG6q8Y\",\"ttl\":1209600,\"created\":\"2017-05-05T15:07:25.497Z\",\"userId\":2}"
     },
     "ACL": {},
     "RoleMapping": {},
@@ -40,6 +53,10 @@
       "1": "{\"bookId\":2,\"authorId\":10,\"id\":1}",
       "2": "{\"bookId\":3,\"authorId\":10,\"id\":2}"
     },
+    "SiteBook": {
+      "1": "{\"bookId\":5,\"siteId\":3,\"id\":1}",
+      "2": "{\"bookId\":4,\"siteId\":3,\"id\":2}"
+    },
     "Note": {
       "1": "{\"title\":\"1st note\",\"id\":1}",
       "2": "{\"title\":\"Who is Afraid\",\"Genre\":\"HUMOR\",\"authorId\":3,\"id\":2}",
@@ -47,13 +64,7 @@
       "4": "{\"title\":\"The Bluest Eye\",\"authorId\":5,\"id\":4}",
       "5": "{\"title\":\"Of Mice and Men\",\"Genre\":\"HUMOR\",\"authorId\":4,\"id\":5}",
       "6": "{\"title\":\"Love and Prejudice\",\"authorId\":8,\"Genre\":\"ROMANCE\",\"id\":6}",
-      "7": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":7}",
-      "8": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":8}",
-      "9": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":9}",
-      "10": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":10}",
-      "11": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":11}",
-      "12": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":12}",
-      "13": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":13}"
+      "7": "{\"title\":\"Heckelbery Finn\",\"content\":{\"body\":\"Heckelbery Finn\",\"footer\":\"The end\"},\"authorId\":8,\"id\":7}"
     },
     "Author": {
       "1": "{\"first_name\":\"Jane\",\"last_name\":\"Austin\",\"birth_date\":\"1883-10-15T00:00:00.000Z\",\"id\":8,\"friendIds\":[5,7]}",
@@ -71,7 +82,9 @@
     "Book": {
       "1": "{\"name\":\"Book 1\",\"links\":[{\"id\":1,\"name\":\"Author 1\",\"notes\":\"Note 1\",\"linkedId\":1,\"linkedType\":\"Author\"},{\"id\":2,\"name\":\"Reader 1\",\"notes\":\"Note 2\",\"linkedId\":1,\"linkedType\":\"Reader\"}],\"id\":1}",
       "2": "{\"name\":\"Cool Book\",\"links\":[],\"id\":2}",
-      "3": "{\"name\":\"Lame Book\",\"links\":[],\"id\":3}"
+      "3": "{\"name\":\"Lame Book\",\"links\":[],\"id\":3}",
+      "4": "{\"name\":\"a book in a site\",\"links\":[],\"id\":4}",
+      "5": "{\"name\":\"another book in a site\",\"links\":[],\"id\":5}"
     },
     "Order": {
       "1": "{\"date\":\"2014-12-31T18:30:00.000Z\",\"description\":\"First order by Customer A\",\"customerId\":1,\"id\":1}",
@@ -93,10 +106,23 @@
     "EmailAddress": {},
     "Account": {
       "1": "{\"name\":\"Checking\",\"balance\":5000,\"id\":1}",
-      "2": "{\"name\":\"Saving\",\"balance\":2000,\"id\":2}"
+      "2": "{\"name\":\"Saving\",\"balance\":2000,\"id\":2}",
+      "3": "{\"username\":\"art\",\"password\":\"$2a$10$GV5nKAZDLSU578dS.OTEM.PizyrxSCQ42CSGKmPZBrjfOTQUeYKUS\",\"email\":\"art@email.com\",\"id\":3}",
+      "4": "{\"username\":\"artalat\",\"password\":\"$2a$10$Izm92yy0TjkEoFfAmVNK0OQh8na9zLdI1zkPxQLOoxz28KCrfJbNm\",\"email\":\"me@artalat.com\",\"id\":4}"
     },
     "Googlemaps": {
       "1": "{\"location\":{\"lat\":10,\"lng\":10},\"id\":1}"
+    },
+    "CustomAccessToken": {
+      "4qoQFI1FtQP05tmWI2sJ6rzUxLRoznMFjYbynazB9XYYTm0IOgfS7WtrmeIeGGPe": "{\"id\":\"4qoQFI1FtQP05tmWI2sJ6rzUxLRoznMFjYbynazB9XYYTm0IOgfS7WtrmeIeGGPe\",\"ttl\":1209600,\"created\":\"2017-05-04T14:51:49.604Z\",\"userId\":3,\"principalType\":\"Account\"}",
+      "FbJ1Fve9jycQc0VC96pcSN09X5sKYeAWkyRnWnI4VHff8CWtloWGLoUsbB4RiXoC": "{\"id\":\"FbJ1Fve9jycQc0VC96pcSN09X5sKYeAWkyRnWnI4VHff8CWtloWGLoUsbB4RiXoC\",\"ttl\":1209600,\"created\":\"2017-05-04T15:29:03.739Z\",\"userId\":3,\"principalType\":\"Account\"}",
+      "6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw": "{\"id\":\"6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw\",\"ttl\":1209600,\"created\":\"2017-05-04T18:09:40.230Z\",\"userId\":4,\"principalType\":\"Account\"}"
+    },
+    "Site": {
+      "1": "{\"name\":\"blueeast\",\"active\":true,\"location\":{\"lat\":0,\"lng\":0},\"image\":\"string\",\"ownerId\":4,\"id\":1}",
+      "2": "{\"name\":\"Site of owner 1\",\"active\":true,\"location\":{\"lat\":0,\"lng\":0},\"image\":\"string\",\"ownerId\":1,\"id\":2}",
+      "3": "{\"name\":\"sample site\",\"active\":true,\"location\":{\"lat\":0,\"lng\":0},\"image\":\"string\",\"ownerId\":4,\"id\":3}",
+      "4": "{\"name\":\"xyz\",\"active\":true,\"location\":{\"lat\":0,\"lng\":0},\"image\":\"string\",\"ownerId\":4,\"id\":4}"
     }
   }
 }

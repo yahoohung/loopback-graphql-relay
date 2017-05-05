@@ -12,6 +12,43 @@ describe('Relations', () => {
 
   before(() => Promise.fromCallback(cb => cpx.copy('./data.json', './data/', cb)));
 
+  it('should query related entity with nested relational data', () => {
+    const query = gql `
+              {
+                Customer {
+                  CustomerFind(first: 2) {
+                    edges {
+                      node {
+                        name
+                        age
+                        orders {
+                          edges {
+                            node {
+                              date
+                              description
+                              customer {
+                                name
+                                age
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }`;
+    return chai.request(server)
+              .post('/graphql')
+              .send({
+                query
+              })
+              .then((res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.data.Customer.CustomerFind.edges.length).to.equal(2);
+              });
+  });
+
   describe('hasManyAndBelongsToMany', () => {
     it('Author should have two books', () => {
       const query = gql `
@@ -60,20 +97,16 @@ describe('Relations', () => {
     it('should have one author and two notes', () => {
       const query = gql `
         {
-          viewer {
-            authors (first: 1) {
-              edges {
-                node {
-                  id
-                  first_name
-                  last_name
-                  notes {
-                    edges {
-                      node {
-                        id
-                        title
-                      }
-                    }
+          Author {
+            AuthorFindById(id: 3) {
+              id
+              first_name
+              last_name
+              notes {
+                edges {
+                  node {
+                    id
+                    title
                   }
                 }
               }
@@ -88,9 +121,8 @@ describe('Relations', () => {
                 .then((res) => {
                   expect(res).to.have.status(200);
                   const result = res.body.data;
-                  expect(result.viewer.authors.edges.length).to.equal(1);
-                  expect(result.viewer.authors.edges[0].node.first_name).to.equal('Virginia');
-                  expect(result.viewer.authors.edges[0].node.notes.edges.length).to.equal(2);
+                  expect(result.Author.AuthorFindById.first_name).to.equal('Virginia');
+                  expect(result.Author.AuthorFindById.notes.edges.length).to.equal(2);
                 });
     });
   });
@@ -127,17 +159,12 @@ describe('Relations', () => {
     it('should have one book and two links', () => {
       const query = gql `
         {
-          viewer {
-            books {
-              edges {
-                node {
-                  id
-                  name
-                  links {
-                    id
-                    name
-                  }
-                }
+          Book {
+            BookFindById(id: 1) {
+              id
+              name
+              links {
+                id
               }
             }
           }
@@ -150,9 +177,8 @@ describe('Relations', () => {
                 .then((res) => {
                   expect(res).to.have.status(200);
                   const result = res.body.data;
-                  expect(result.viewer.books.edges.length).to.equal(3);
-                  expect(result.viewer.books.edges[0].node.name).to.equal('Book 1');
-                  expect(result.viewer.books.edges[0].node.links.length).to.equal(2);
+                  expect(result.Book.BookFindById.name).to.equal('Book 1');
+                  expect(result.Book.BookFindById.links.length).to.equal(2);
                 });
     });
   });
@@ -222,17 +248,13 @@ describe('Relations', () => {
     it('should have orders with its customer', () => {
       const query = gql `
         {
-          viewer {
-            orders(first: 1) {
-              edges {
-                node {
-                  id
-                  description
-                  customer {
-                    id
-                    name
-                  }
-                }
+          Order {
+            OrderFindById(id: 1) {
+              id
+              description
+              customer {
+                id
+                name
               }
             }
           }
@@ -245,8 +267,7 @@ describe('Relations', () => {
                 .then((res) => {
                   expect(res).to.have.status(200);
                   const result = res.body.data;
-                  expect(result.viewer.orders.edges.length).to.equal(1);
-                  expect(result.viewer.orders.edges[0].node.customer.name).to.equal('Customer A');
+                  expect(result.Order.OrderFindById.customer.name).to.equal('Customer A');
                 });
     });
   });

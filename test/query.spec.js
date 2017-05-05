@@ -17,14 +17,12 @@ describe('Queries', () => {
       const query = gql `
             query {
               viewer {
-                orders(first: 1) {
+                sites(first: 1) {
                   edges {
                     node {
-                      date
-                      description
-                      customer {
-                        name
-                        age
+                      name
+                      owner {
+                        username
                       }
                     }
                   }
@@ -33,63 +31,209 @@ describe('Queries', () => {
             }`;
       return chai.request(server)
                 .post('/graphql')
+                .set('Authorization', '6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw')
                 .send({
                   query
                 })
                 .then((res) => {
                   expect(res).to.have.status(200);
                   const result = res.body.data;
-                  expect(result.viewer.orders.edges.length).to.equal(1);
-                });
-    });
-  });
-  describe('relationships', () => {
-    it('should query related entity with nested relational data', () => {
-      const query = gql `
-                query {
-                  viewer {
-                    customers(first: 2) {
-                      edges {
-                        node {
-                          name
-                          age
-                          orders {
-                            edges {
-                              node {
-                                date
-                                description
-                                customer {
-                                  name
-                                  age
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-            `;
-      return chai.request(server)
-                .post('/graphql')
-                .send({
-                  query
-                })
-                .then((res) => {
-                  expect(res).to.have.status(200);
-                  expect(res.body.data.viewer.customers.edges.length).to.equal(2);
+                  expect(result.viewer.sites.edges.length).to.equal(1);
+                  expect(result.viewer.sites.edges[0].node.name).to.equal('blueeast');
+                  expect(result.viewer.sites.edges[0].node.owner.username).to.equal('artalat');
                 });
     });
   });
 
-
-  it('should call a remoteHook and return the related data', () => {
+  it('should have a total count of 3', () => {
     const query = gql `
-      query a {
-        Customer {
-          CustomerFindById(input: {id: "1"}) {
-            obj {
+      {
+        viewer {
+          sites {
+            totalCount
+          }
+        }
+      }`;
+    return chai.request(server)
+            .post('/graphql')
+            .set('Authorization', '6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw')
+            .send({
+              query
+            })
+            .then((res) => {
+              expect(res).to.have.status(200);
+              expect(res.body.data.viewer.sites.totalCount).to.equal(3);
+            });
+  });
+
+
+  it('should sort books by name in descending order', () => {
+    const query = gql `
+      {
+        viewer {
+          sites (order: "name DESC") {
+            totalCount
+            edges {
+              node {
+                id
+                name
+              }
+            }
+          }
+        }
+      }`;
+    return chai.request(server)
+            .post('/graphql')
+            .set('Authorization', '6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw')
+            .send({
+              query
+            })
+            .then((res) => {
+              expect(res).to.have.status(200);
+              expect(res.body.data.viewer.sites.totalCount).to.equal(3);
+              expect(res.body.data.viewer.sites.edges[0].node.name).to.equal('xyz');
+            });
+  });
+
+  it('should return current logged in user', () => {
+    const query = gql `
+      {
+        viewer {
+          me { id username email }
+        }
+      }`;
+    return chai.request(server)
+            .post('/graphql')
+            .set('Authorization', '6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw')
+            .send({
+              query
+            })
+            .then((res) => {
+              expect(res).to.have.status(200);
+              expect(res.body.data.viewer.me.username).to.equal('artalat');
+              expect(res.body.data.viewer.me.email).to.equal('me@artalat.com');
+            });
+  });
+
+  describe('Remote hooks', () => {
+
+    it('count', () => {
+      const query = gql `
+        {
+          Author {
+            count: AuthorCount
+          }
+        }`;
+      return chai.request(server)
+              .post('/graphql')
+              .send({
+                query
+              })
+              .then((res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.data.Author.count).to.be.above(7);
+              });
+    });
+
+
+    it('exists', () => {
+      const query = gql `
+        {
+          Author {
+            exists: AuthorExists(id: 3) 
+          }
+        }`;
+      return chai.request(server)
+              .post('/graphql')
+              .send({
+                query
+              })
+              .then((res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.data.Author.exists).to.equal(true);
+              });
+    });
+
+
+    it('findOne', () => {
+      const query = gql `
+        {
+          Author {
+            AuthorFindOne(filter: { where: {id: 3}}) {
+              id
+              first_name
+              last_name
+            } 
+          }
+        }`;
+      return chai.request(server)
+              .post('/graphql')
+              .send({
+                query
+              })
+              .then((res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.data.Author.AuthorFindOne.first_name).to.equal('Virginia');
+                expect(res.body.data.Author.AuthorFindOne.last_name).to.equal('Wolf');
+              });
+    });
+
+
+    it('findById', () => {
+      const query = gql `
+        {
+          Author {
+            AuthorFindById(id: 3) {
+              id
+              first_name
+              last_name
+            } 
+          }
+        }`;
+      return chai.request(server)
+              .post('/graphql')
+              .send({
+                query
+              })
+              .then((res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.data.Author.AuthorFindById.first_name).to.equal('Virginia');
+                expect(res.body.data.Author.AuthorFindById.last_name).to.equal('Wolf');
+              });
+    });
+
+
+    it('find', () => {
+      const query = gql `
+        {
+          Book {
+            BookFind {
+              edges {
+                node {
+                  id
+                  name
+                }
+              }
+            }
+          }
+        }`;
+      return chai.request(server)
+              .post('/graphql')
+              .send({
+                query
+              })
+              .then((res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.data.Book.BookFind.edges.length).to.be.above(2);
+              });
+    });
+
+
+    it('should call a remoteHook and return the related data', () => {
+      const query = gql `
+        {
+          Customer {
+            CustomerFindById(id: 1) {
               name
               age
               billingAddress {
@@ -110,67 +254,21 @@ describe('Queries', () => {
               }
             }
           }
-        }
-      }`;
-    return chai.request(server)
-            .post('/graphql')
-            .send({
-              query
-            })
-            .then((res) => {
-              expect(res).to.have.status(200);
-              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.name');
-              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.age');
-              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.orders.edges[0].node.id');
-              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.orders.edges[0].node.description');
-            });
-  });
-
-  it('should have a total count of 7', () => {
-    const query = gql `
-      {
-        viewer {
-          customers {
-            totalCount
-          }
-        }
-      }`;
-    return chai.request(server)
-            .post('/graphql')
-            .send({
-              query
-            })
-            .then((res) => {
-              expect(res).to.have.status(200);
-              expect(res.body.data.viewer.customers.totalCount).to.equal(7);
-            });
-  });
+        }`;
+      return chai.request(server)
+              .post('/graphql')
+              .send({
+                query
+              })
+              .then((res) => {
+                expect(res).to.have.status(200);
+                expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.name');
+                expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.age');
+                expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.orders.edges[0].node.id');
+                expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.orders.edges[0].node.description');
+              });
+    });
 
 
-  it('should sort books by name in descending order', () => {
-    const query = gql `
-      {
-        viewer {
-          books (order: "name DESC") {
-            totalCount
-            edges {
-              node {
-                id
-                name
-              }
-            }
-          }
-        }
-      }`;
-    return chai.request(server)
-            .post('/graphql')
-            .send({
-              query
-            })
-            .then((res) => {
-              expect(res).to.have.status(200);
-              expect(res.body.data.viewer.books.totalCount).to.equal(3);
-              expect(res.body.data.viewer.books.edges[0].node.name).to.equal('Lame Book');
-            });
   });
 });

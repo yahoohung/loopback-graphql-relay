@@ -16,15 +16,12 @@ describe('Types', () => {
     it('should contain a single object with location', () => {
       const query = gql `
         {
-          viewer {
-            googlemaps {
-              edges {
-                node {
-                  id location {
-                    lat
-                    lng
-                  }
-                }
+          Googlemaps {
+            GooglemapsFindOne(filter:{where: {id: 1}}) {
+              id
+              location {
+                lat
+                lng
               }
             }
           }
@@ -37,24 +34,22 @@ describe('Types', () => {
                 .then((res) => {
                   expect(res).to.have.status(200);
                   const result = res.body.data;
-                  expect(result.viewer.googlemaps.edges.length).to.equal(1);
-                  expect(result.viewer.googlemaps.edges[0].node.location.lat).to.equal(10);
-                  expect(result.viewer.googlemaps.edges[0].node.location.lng).to.equal(10);
+                  expect(result.Googlemaps.GooglemapsFindOne.location.lat).to.equal(10);
+                  expect(result.Googlemaps.GooglemapsFindOne.location.lng).to.equal(10);
                 });
     });
-  });
-  describe('GeoPoint', () => {
+
+
     it('should have location distance of 486 miles', () => {
       const query = gql `
         {
-          viewer {
-            googlemaps {
-              edges {
-                node {
-                  id location {
-                    distance: distanceTo(point: {lat: 5, lng: 5})
-                  }
-                }
+          Googlemaps {
+            GooglemapsFindOne(filter:{where: {id: 1}}) {
+              id
+              location {
+                lat
+                lng
+                distance: distanceTo(point: {lat: 5, lng: 5})
               }
             }
           }
@@ -67,8 +62,7 @@ describe('Types', () => {
                 .then((res) => {
                   expect(res).to.have.status(200);
                   const result = res.body.data;
-                  expect(result.viewer.googlemaps.edges.length).to.equal(1);
-                  expect(result.viewer.googlemaps.edges[0].node.location.distance).to.equal(486.3956513042483);
+                  expect(result.Googlemaps.GooglemapsFindOne.location.distance).to.equal(486.3956513042483);
                 });
     });
   });

@@ -21,7 +21,7 @@ function getFirst(model, obj, args) {
 
 function findOne(model, obj, args, context) {
   const id = obj ? obj[model.getIdName()] : args.id;
-  return model.findById(id);
+  return (id) ? model.findById(id) : null;
 }
 
 function getList(model, obj, args) {
@@ -157,5 +157,5 @@ module.exports = {
   findOne,
   findRelatedMany,
   findRelatedOne,
-	findAllRelated
+  findAllRelated
 };

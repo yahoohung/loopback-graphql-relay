@@ -1,5 +1,5 @@
 
-### Status
+### Status 🎊
 [![npm version](https://badge.fury.io/js/loopback-graphql-relay.svg)](https://badge.fury.io/js/loopback-graphql-relay) [![Build Status](https://travis-ci.org/BlueEastCode/loopback-graphql-relay.svg?branch=master)](https://travis-ci.org/BlueEastCode/loopback-graphql-relay) [![bitHound Overall Score](https://www.bithound.io/github/BlueEastCode/loopback-graphql-relay/badges/score.svg)](https://www.bithound.io/github/BlueEastCode/loopback-graphql-relay) [![bitHound Dependencies](https://www.bithound.io/github/BlueEastCode/loopback-graphql-relay/badges/dependencies.svg)](https://www.bithound.io/github/BlueEastCode/loopback-graphql-relay/develop/dependencies/npm) [![bitHound Dev Dependencies](https://www.bithound.io/github/BlueEastCode/loopback-graphql-relay/badges/devDependencies.svg)](https://www.bithound.io/github/BlueEastCode/loopback-graphql-relay/develop/dependencies/npm) [![bitHound Code](https://www.bithound.io/github/BlueEastCode/loopback-graphql-relay/badges/code.svg)](https://www.bithound.io/github/BlueEastCode/loopback-graphql-relay) [![Known Vulnerabilities](https://snyk.io/test/npm/loopback-graphql-relay/badge.svg)](https://snyk.io/test/npm/loopback-graphql-relay)
 
 # Relay GraphQL Server for Loopback (Apollo Server)
@@ -7,6 +7,9 @@
 Combine the powers of [ApolloStack](http://www.apollostack.com/) GraphQL with the backend of Loopback to automatically generate GraphQL endpoints based on Loopback Schema.
 
 ![Loopback Graphql](./resources/loopback-graphql.png?raw=true "LoopBack Apollo Architecture") 
+
+## Caution ⚠️
+This is a work in progress. Until version 1.0 endpoint API may change.
 
 ## Queries 💥
 - Relay Specification: `node` query to fetch single entity by ID
@@ -17,7 +20,7 @@ Combine the powers of [ApolloStack](http://www.apollostack.com/) GraphQL with th
 - Relay Pagination (`first`, `last`, `before`, `after`)
 - Remote methods integration
 
-## Mutations 🎊
+## Mutations 🚀
 - Nested and clean schema structure
 - Maps all `post`, `put`, `patch` and `delete` methods to mutations
 - Remote methods integration
@@ -56,7 +59,7 @@ Combine the powers of [ApolloStack](http://www.apollostack.com/) GraphQL with th
 - [ ] File uploads
 
 
-## Usage
+## Usage 💻
 
 ```sh
 npm install loopback-graphql-relay
@@ -73,6 +76,11 @@ Add the loopback-graphql-relay component to the `server/component-config.json`:
       "options": {},
       "socketOptions": {}
     },
+    "viewer": {
+      "AccessTokenModel": "CustomAccessToken",
+      "relation": "user",
+      "UserModel": "Account"
+    }
   }
 ```
 
@@ -82,8 +90,8 @@ Graphiql is available on `graphiqlPath` path. (Default: `/graphiql`);
 
 Apollo's Subscription Server can be customised by passing `subscriptionServer` configuration. More information can be found at [SubscriptionServer Docs](https://github.com/apollographql/subscriptions-transport-ws#subscriptionserver).
 
-## Inspiration
+## Inspiration 🙌
 This repository originally started as a fork of the [loopback-graphql](https://github.com/Tallyb/loopback-graphql) project by [Tallyb](https://github.com/Tallyb). But due to considerable change in the way query end points are created, this repository is maitained as an independant project.
 
-## Roadmap
+## Roadmap 🛣
 [See here the Github project](https://github.com/BlueEastCode/loopback-graphql-relay/projects)

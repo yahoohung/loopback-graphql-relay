@@ -1,17 +1,57 @@
 {
   "name": "Account",
-  "base": "PersistedModel",
+  "plural": "Accounts",
+  "base": "User",
   "idInjection": true,
   "properties": {
-    "name": {
+    "firstName": {
       "type": "string"
     },
-    "balance": {
-      "type": "number"
+    "lastName": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
     }
   },
   "validations": [],
-  "relations": {},
-  "acls": [],
+  "relations": {
+    "sites": {
+      "type": "hasMany",
+      "model": "Site",
+      "foreignKey": "ownerId"
+    },
+    "order": {
+      "type": "hasMany",
+      "model": "Order",
+      "foreignKey": "ownerId"
+    },
+    "accessTokens": {
+      "type": "hasMany",
+      "model": "CustomAccessToken",
+      "polymorphic": {
+        "foreignKey": "userId",
+        "discriminator": "principalType"
+      },
+      "options": {
+        "disableInclude": true
+      }
+    }
+  },
+  "acls": [
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "__get__sites"
+    }
+  ],
   "methods": {}
 }

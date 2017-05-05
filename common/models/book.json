@@ -20,6 +20,11 @@
       "type": "hasAndBelongsToMany",
       "model": "Author",
       "foreignKey": ""
+    },
+    "sites": {
+      "type": "hasAndBelongsToMany",
+      "model": "Site",
+      "foreignKey": ""
     }
   },
   "acls": [],

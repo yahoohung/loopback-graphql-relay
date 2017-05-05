@@ -22,7 +22,7 @@ describe('Pagination', () => {
   it('should query first 2 entities', () => {
     const query = gql `{
       viewer {
-        notes(first: 2) {
+        sites(first: 2) {
           totalCount
           pageInfo {
             hasNextPage
@@ -32,8 +32,8 @@ describe('Pagination', () => {
           }
           edges {
             node {
-              title
-              id
+              id 
+              name
             }
             cursor
           }
@@ -42,21 +42,23 @@ describe('Pagination', () => {
     }`;
     return chai.request(server)
             .post('/graphql')
+            .set('Authorization', '6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw')
             .send({
               query
             })
             .then((res) => {
               expect(res).to.have.status(200);
               res = res.body.data;
-              expect(res.viewer.notes.edges.length).to.be.above(0);
-              expect(res.viewer.notes.totalCount).to.equal(14);
+              expect(res.viewer.sites.edges.length).to.equal(2);
+              expect(res.viewer.sites.totalCount).to.equal(3);
             });
   });
 
   it('should query entity after cursor', () => {
     const query = gql `{
       viewer {
-        notes(after: "Y29ubmVjdGlvbi40", first: 1) {
+        sites(after: "Y29ubmVjdGlvbi4x", first: 1) {
+          totalCount
           pageInfo {
             hasNextPage
             hasPreviousPage
@@ -66,7 +68,7 @@ describe('Pagination', () => {
           edges {
             node {
               id
-              title
+              name
             }
             cursor
           }
@@ -75,22 +77,24 @@ describe('Pagination', () => {
     }`;
     return chai.request(server)
             .post('/graphql')
+            .set('Authorization', '6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw')
             .send({
               query
             })
             .then((res) => {
               expect(res).to.have.status(200);
               res = res.body.data;
-              expect(res.viewer.notes.edges.length).to.be.above(0);
-              expect(fromGlobalId(res.viewer.notes.edges[0].node.id).id).to.equal('5');
-              expect(res.viewer.notes.pageInfo.hasNextPage).to.be.true;
+              expect(res.viewer.sites.totalCount).to.equal(3);
+              expect(res.viewer.sites.edges.length).to.be.above(0);
+              expect(fromGlobalId(res.viewer.sites.edges[0].node.id).id).to.equal('3');
+              expect(res.viewer.sites.pageInfo.hasNextPage).to.be.true;
             });
   });
 
   it('should query related entity on edge', () => {
     const query = gql `{
 			viewer {
-				authors {
+				sites (after: "Y29ubmVjdGlvbi4x", first: 1) {
 					pageInfo {
 						hasNextPage
 						hasPreviousPage
@@ -100,12 +104,12 @@ describe('Pagination', () => {
 					edges {
 						node {
 							id
-							last_name
-							notes {
+							name
+							books {
 								totalCount
 								edges {
 									node {
-										title
+										name
 									}
 								}
 							}
@@ -117,15 +121,17 @@ describe('Pagination', () => {
 		}`;
     return chai.request(server)
             .post('/graphql')
+            .set('Authorization', '6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw')
             .send({
               query
             })
             .then((res) => {
               expect(res).to.have.status(200);
               res = res.body.data;
-              expect(res.viewer.authors.edges[0].node.notes.edges.length).to.be.above(0);
-              expect(res.viewer.authors.edges[0].node.notes.totalCount).to.be.above(0);
-              expect(res.viewer.authors.edges[0].cursor).not.to.be.empty;
+              expect(res.viewer.sites.edges[0].node.name).to.equal('sample site');
+              expect(res.viewer.sites.edges[0].node.books.edges.length).to.be.above(0);
+              expect(res.viewer.sites.edges[0].node.books.totalCount).to.be.above(0);
+              expect(res.viewer.sites.edges[0].cursor).not.to.be.empty;
             });
   });
 

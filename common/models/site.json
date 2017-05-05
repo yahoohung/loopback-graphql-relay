@@ -32,6 +32,11 @@
       "type": "belongsTo",
       "model": "Account",
       "foreignKey": ""
+    },
+    "books": {
+      "type": "hasAndBelongsToMany",
+      "model": "Book",
+      "foreignKey": ""
     }
   },
   "acls": [

@@ -31,7 +31,6 @@
   "acls": [],
   "methods": {
     "vote": {
-      "isStatic": false,
       "accepts": [
         {
           "arg": "rank",

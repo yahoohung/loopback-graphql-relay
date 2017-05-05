@@ -25,7 +25,6 @@
       "model": "Account",
       "foreignKey": ""
     }
-
   },
   "acls": [],
   "methods": {}

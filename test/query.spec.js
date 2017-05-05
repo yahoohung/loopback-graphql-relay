@@ -17,14 +17,12 @@ describe('Queries', () => {
       const query = gql `
             query {
               viewer {
-                orders(first: 1) {
+                sites(first: 1) {
                   edges {
                     node {
-                      date
-                      description
-                      customer {
-                        name
-                        age
+                      name
+                      owner {
+                        username
                       }
                     }
                   }
@@ -33,73 +31,38 @@ describe('Queries', () => {
             }`;
       return chai.request(server)
                 .post('/graphql')
+                .set('Authorization', '6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw')
                 .send({
                   query
                 })
                 .then((res) => {
                   expect(res).to.have.status(200);
                   const result = res.body.data;
-                  expect(result.viewer.orders.edges.length).to.equal(1);
-                });
-    });
-  });
-  describe('Relationships', () => {
-    it('should query related entity with nested relational data', () => {
-      const query = gql `
-                query {
-                  viewer {
-                    customers(first: 2) {
-                      edges {
-                        node {
-                          name
-                          age
-                          orders {
-                            edges {
-                              node {
-                                date
-                                description
-                                customer {
-                                  name
-                                  age
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-            `;
-      return chai.request(server)
-                .post('/graphql')
-                .send({
-                  query
-                })
-                .then((res) => {
-                  expect(res).to.have.status(200);
-                  expect(res.body.data.viewer.customers.edges.length).to.equal(2);
+                  expect(result.viewer.sites.edges.length).to.equal(1);
+                  expect(result.viewer.sites.edges[0].node.name).to.equal('blueeast');
+                  expect(result.viewer.sites.edges[0].node.owner.username).to.equal('artalat');
                 });
     });
   });
 
-  it('should have a total count of 7', () => {
+  it('should have a total count of 3', () => {
     const query = gql `
       {
         viewer {
-          customers {
+          sites {
             totalCount
           }
         }
       }`;
     return chai.request(server)
             .post('/graphql')
+            .set('Authorization', '6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw')
             .send({
               query
             })
             .then((res) => {
               expect(res).to.have.status(200);
-              expect(res.body.data.viewer.customers.totalCount).to.equal(7);
+              expect(res.body.data.viewer.sites.totalCount).to.equal(3);
             });
   });
 
@@ -108,7 +71,7 @@ describe('Queries', () => {
     const query = gql `
       {
         viewer {
-          books (order: "name DESC") {
+          sites (order: "name DESC") {
             totalCount
             edges {
               node {
@@ -121,13 +84,14 @@ describe('Queries', () => {
       }`;
     return chai.request(server)
             .post('/graphql')
+            .set('Authorization', '6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw')
             .send({
               query
             })
             .then((res) => {
               expect(res).to.have.status(200);
-              expect(res.body.data.viewer.books.totalCount).to.equal(3);
-              expect(res.body.data.viewer.books.edges[0].node.name).to.equal('Lame Book');
+              expect(res.body.data.viewer.sites.totalCount).to.equal(3);
+              expect(res.body.data.viewer.sites.edges[0].node.name).to.equal('xyz');
             });
   });
 
@@ -140,14 +104,14 @@ describe('Queries', () => {
       }`;
     return chai.request(server)
             .post('/graphql')
-            .set('Authorization', 'aOFdthBV4eoid5AFmuQpkaTo9FmFwYvMMbRn474O6VrT16vDMI4WxdBrtf1qHkBD')
+            .set('Authorization', '6NJWVfqaWHjgcv3mmuWarSVuUic8WzFSutftH0mADLCZaZeuLlSJYbaHAVC6D3gw')
             .send({
               query
             })
             .then((res) => {
               expect(res).to.have.status(200);
-              expect(res.body.data.viewer.me.username).to.equal('naveenmeher');
-              expect(res.body.data.viewer.me.email).to.equal('naveenmeher07@gmail.com');
+              expect(res.body.data.viewer.me.username).to.equal('artalat');
+              expect(res.body.data.viewer.me.email).to.equal('me@artalat.com');
             });
   });
 

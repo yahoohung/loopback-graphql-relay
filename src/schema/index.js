@@ -11,7 +11,7 @@ function getSchema(models, options) {
   getTypes(models);
 
   const items = {
-    query: getQuery(models, options.AccessToken),
+    query: getQuery(models, options),
     mutation: getMutation(models),
   };
 

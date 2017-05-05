@@ -73,6 +73,11 @@ Add the loopback-graphql-relay component to the `server/component-config.json`:
       "options": {},
       "socketOptions": {}
     },
+    "viewer": {
+      "AccessTokenModel": "CustomAccessToken",
+      "relation": "user",
+      "UserModel": "Account"
+    }
   }
 ```
 

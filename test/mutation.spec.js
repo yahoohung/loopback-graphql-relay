@@ -17,9 +17,9 @@ describe('Mutations', () => {
 
   it('should add a single entity', () => {
     const query = gql `
-      mutation save($obj: AuthorInput!) {
+      mutation save($data: JSON!) {
         Author {
-          AuthorSave(input: {obj: $obj}) {
+          AuthorCreate(input: {data: $data}) {
             obj {
               first_name
               last_name
@@ -29,7 +29,7 @@ describe('Mutations', () => {
         }
       }`;
     const variables = {
-      obj: {
+      data: {
         first_name: 'Unit Test',
         last_name: 'Author',
         birth_date: new Date()
@@ -44,15 +44,19 @@ describe('Mutations', () => {
             })
             .then((res) => {
               expect(res).to.have.status(200);
+              const result = res.body.data;
+              expect(result.Author.AuthorCreate.obj.first_name).to.equal(variables.data.first_name);
+              expect(result.Author.AuthorCreate.obj.last_name).to.equal(variables.data.last_name);
+              // expect(Date.parse(result.Author.AuthorCreate.obj.birth_date)).to.equal(variables.data.birth_date);
             });
   });
 
   it('should add a single entity with sub type', () => {
     const body = 'Heckelbery Finn';
     const query = gql `
-      mutation save($obj: NoteInput!) {
+      mutation save($data: JSON!) {
         Note {
-          NoteSave(input: {obj: $obj}) {
+          NoteCreate(input: { data: $data }) {
             obj {
               id
               title
@@ -66,10 +70,9 @@ describe('Mutations', () => {
             }
           }
         }
-      }
-        `;
+      }`;
     const variables = {
-      obj: {
+      data: {
         title: 'Heckelbery Finn',
         authorId: 8,
         content: {
@@ -87,7 +90,10 @@ describe('Mutations', () => {
             })
             .then((res) => {
               expect(res).to.have.status(200);
-              expect(res.body.data.Note.NoteSave.obj.content.body).to.equal(body);
+              const result = res.body.data;
+              expect(result.Note.NoteCreate.obj.content.body).to.equal(body);
+              expect(result.Note.NoteCreate.obj.author.first_name).to.equal('Jane');
+              expect(result.Note.NoteCreate.obj.author.last_name).to.equal('Austin');
             });
   });
 
@@ -95,7 +101,7 @@ describe('Mutations', () => {
     const query = gql `
       mutation delete($id: ID!) {
         Author {
-          AuthorDelete(input: {id: $id}) {
+          AuthorDeleteById(input: {id: $id}) {
             clientMutationId
           }
         }

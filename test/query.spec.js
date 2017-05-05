@@ -43,7 +43,7 @@ describe('Queries', () => {
                 });
     });
   });
-  describe('relationships', () => {
+  describe('Relationships', () => {
     it('should query related entity with nested relational data', () => {
       const query = gql `
                 query {
@@ -81,49 +81,6 @@ describe('Queries', () => {
                   expect(res.body.data.viewer.customers.edges.length).to.equal(2);
                 });
     });
-  });
-
-
-  it('should call a remoteHook and return the related data', () => {
-    const query = gql `
-      query a {
-        Customer {
-          CustomerFindById(input: {id: "1"}) {
-            obj {
-              name
-              age
-              billingAddress {
-                id
-              }
-              emailList {
-                id
-              }
-              accountIds
-              orders {
-                edges {
-                  node {
-                    id
-                    date
-                    description
-                  }
-                }
-              }
-            }
-          }
-        }
-      }`;
-    return chai.request(server)
-            .post('/graphql')
-            .send({
-              query
-            })
-            .then((res) => {
-              expect(res).to.have.status(200);
-              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.name');
-              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.age');
-              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.orders.edges[0].node.id');
-              expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.obj.orders.edges[0].node.description');
-            });
   });
 
   it('should have a total count of 7', () => {
@@ -172,5 +129,182 @@ describe('Queries', () => {
               expect(res.body.data.viewer.books.totalCount).to.equal(3);
               expect(res.body.data.viewer.books.edges[0].node.name).to.equal('Lame Book');
             });
+  });
+
+  it('should return current logged in user', () => {
+    const query = gql `
+      {
+        viewer {
+          me { id username email }
+        }
+      }`;
+    return chai.request(server)
+            .post('/graphql')
+            .set('Authorization', 'aOFdthBV4eoid5AFmuQpkaTo9FmFwYvMMbRn474O6VrT16vDMI4WxdBrtf1qHkBD')
+            .send({
+              query
+            })
+            .then((res) => {
+              expect(res).to.have.status(200);
+              expect(res.body.data.viewer.me.username).to.equal('naveenmeher');
+              expect(res.body.data.viewer.me.email).to.equal('naveenmeher07@gmail.com');
+            });
+  });
+
+  describe('Remote hooks', () => {
+
+    it('count', () => {
+      const query = gql `
+        {
+          Author {
+            count: AuthorCount
+          }
+        }`;
+      return chai.request(server)
+              .post('/graphql')
+              .send({
+                query
+              })
+              .then((res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.data.Author.count).to.be.above(7);
+              });
+    });
+
+
+    it('exists', () => {
+      const query = gql `
+        {
+          Author {
+            exists: AuthorExists(id: 3) 
+          }
+        }`;
+      return chai.request(server)
+              .post('/graphql')
+              .send({
+                query
+              })
+              .then((res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.data.Author.exists).to.equal(true);
+              });
+    });
+
+
+    it('findOne', () => {
+      const query = gql `
+        {
+          Author {
+            AuthorFindOne(filter: { where: {id: 3}}) {
+              id
+              first_name
+              last_name
+            } 
+          }
+        }`;
+      return chai.request(server)
+              .post('/graphql')
+              .send({
+                query
+              })
+              .then((res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.data.Author.AuthorFindOne.first_name).to.equal('Virginia');
+                expect(res.body.data.Author.AuthorFindOne.last_name).to.equal('Wolf');
+              });
+    });
+
+
+    it('findById', () => {
+      const query = gql `
+        {
+          Author {
+            AuthorFindById(id: 3) {
+              id
+              first_name
+              last_name
+            } 
+          }
+        }`;
+      return chai.request(server)
+              .post('/graphql')
+              .send({
+                query
+              })
+              .then((res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.data.Author.AuthorFindById.first_name).to.equal('Virginia');
+                expect(res.body.data.Author.AuthorFindById.last_name).to.equal('Wolf');
+              });
+    });
+
+
+    it('find', () => {
+      const query = gql `
+        {
+          Book {
+            BookFind {
+              edges {
+                node {
+                  id
+                  name
+                }
+              }
+            }
+          }
+        }`;
+      return chai.request(server)
+              .post('/graphql')
+              .send({
+                query
+              })
+              .then((res) => {
+                expect(res).to.have.status(200);
+                expect(res.body.data.Book.BookFind.edges.length).to.be.above(2);
+              });
+    });
+
+
+    it('should call a remoteHook and return the related data', () => {
+      const query = gql `
+        {
+          Customer {
+            CustomerFindById(id: 1) {
+              name
+              age
+              billingAddress {
+                id
+              }
+              emailList {
+                id
+              }
+              accountIds
+              orders {
+                edges {
+                  node {
+                    id
+                    date
+                    description
+                  }
+                }
+              }
+            }
+          }
+        }`;
+      return chai.request(server)
+              .post('/graphql')
+              .send({
+                query
+              })
+              .then((res) => {
+                expect(res).to.have.status(200);
+                expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.name');
+                expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.age');
+                expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.orders.edges[0].node.id');
+                expect(res).to.have.deep.property('body.data.Customer.CustomerFindById.orders.edges[0].node.description');
+              });
+    });
+
+
   });
 });

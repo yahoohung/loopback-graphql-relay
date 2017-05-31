@@ -66,12 +66,12 @@ describe('Queries', () => {
         expect(res).to.have.status(200);
         const result = res.body.data;
         expect(result.viewer.sites.edges.length).to.equal(1);
-        expect(result.viewer.sites.edges[0].node.name).to.equal('xyz');
+        expect(result.viewer.sites.edges[0].node.name).to.equal('sample site');
         expect(result.viewer.sites.edges[0].node.owner.username).to.equal('amnaj');
       });
     });
 
-    it('should have a total count of 1', () => {
+    it('should have a total count of 3', () => {
       const query = gql `
       {
         viewer {
@@ -88,7 +88,7 @@ describe('Queries', () => {
       })
       .then((res) => {
         expect(res).to.have.status(200);
-        expect(res.body.data.viewer.sites.totalCount).to.equal(2);
+        expect(res.body.data.viewer.sites.totalCount).to.equal(3);
       });
     });
 
@@ -115,7 +115,7 @@ describe('Queries', () => {
       })
       .then((res) => {
         expect(res).to.have.status(200);
-        expect(res.body.data.viewer.sites.totalCount).to.equal(2);
+        expect(res.body.data.viewer.sites.totalCount).to.equal(3);
         expect(res.body.data.viewer.sites.edges[0].node.name).to.equal('xyz');
       });
     });

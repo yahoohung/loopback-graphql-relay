@@ -19,17 +19,18 @@ module.exports = function(app, subscriptionManager, opts) {
   const options = subscriptionOpts.options || {};
   const socketOptions = subscriptionOpts.socketOptions || {};
 
-  if(subscriptionOpts.ssl) {
+  let websocketServer;
+  if (subscriptionOpts.ssl) {
     const ssl = {
       key: fs.readFileSync(subscriptionOpts.keyPath),
       cert: fs.readFileSync(subscriptionOpts.certPath)
     };
-    var websocketServer = https.createServer(ssl, (request, response) => {
+    websocketServer = https.createServer(ssl, (request, response) => {
       response.writeHead(404);
       response.end();
     });
   } else {
-    var websocketServer = http.createServer((request, response) => {
+    websocketServer = http.createServer((request, response) => {
       response.writeHead(404);
       response.end();
     });

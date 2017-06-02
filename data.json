@@ -6,7 +6,7 @@
     "RoleMapping": 1,
     "Role": 1,
     "Note": 19,
-    "Author": 31,
+    "Author": 30,
     "Reader": 2,
     "Book": 6,
     "BookAuthor": 3,
@@ -14,19 +14,18 @@
     "Customer": 8,
     "Address": 1,
     "EmailAddress": 1,
-    "Account": 6,
+    "Account": 7,
     "Order": 6,
     "Googlemaps": 2,
     "CustomAccessToken": 1,
-    "Site": 6
+    "Site": 8
   },
   "models": {
     "User": {
       "1": "{\"username\":\"tally\",\"password\":\"$2a$10$b/Ok3FC3HYCbF2LlLXpk4OSsrz5EixJfkfJittHp8eEtPQvUJZiEa\",\"email\":\"tally@a.com\",\"id\":1}",
       "2": "{\"username\":\"naveenmeher\",\"password\":\"$2a$10$tT5y2RfVUdaZvt6iVtDoUeub9WqoqLk40WF5rq4QxQFLJ4bZzzgrO\",\"email\":\"naveenmeher07@gmail.com\",\"id\":2}"
     },
-    "AccessToken": {
-    },
+    "AccessToken": {},
     "ACL": {},
     "RoleMapping": {},
     "Role": {},
@@ -76,8 +75,7 @@
       "26": "{\"first_name\":\"Unit Test\",\"last_name\":\"Author\",\"birth_date\":\"2017-05-31T06:40:25.808Z\",\"friendIds\":[],\"id\":26}",
       "27": "{\"first_name\":\"Unit Test\",\"last_name\":\"Author\",\"birth_date\":\"2017-05-31T06:40:36.168Z\",\"friendIds\":[],\"id\":27}",
       "28": "{\"first_name\":\"Unit Test\",\"last_name\":\"Author\",\"birth_date\":\"2017-05-31T06:41:08.174Z\",\"friendIds\":[],\"id\":28}",
-      "29": "{\"first_name\":\"Unit Test\",\"last_name\":\"Author\",\"birth_date\":\"2017-05-31T06:41:42.483Z\",\"friendIds\":[],\"id\":29}",
-      "30": "{\"first_name\":\"Unit Test\",\"last_name\":\"Author\",\"birth_date\":\"2017-05-31T06:42:11.715Z\",\"friendIds\":[],\"id\":30}"
+      "29": "{\"first_name\":\"Unit Test\",\"last_name\":\"Author\",\"birth_date\":\"2017-05-31T06:41:42.483Z\",\"friendIds\":[],\"id\":29}"
     },
     "Reader": {
       "1": "{\"name\":\"Reader 1\",\"id\":1}"
@@ -112,7 +110,8 @@
       "2": "{\"name\":\"Saving\",\"balance\":2000,\"id\":2}",
       "3": "{\"username\":\"art\",\"password\":\"$2a$10$GV5nKAZDLSU578dS.OTEM.PizyrxSCQ42CSGKmPZBrjfOTQUeYKUS\",\"email\":\"art@email.com\",\"id\":3}",
       "4": "{\"username\":\"artalat\",\"password\":\"$2a$10$Izm92yy0TjkEoFfAmVNK0OQh8na9zLdI1zkPxQLOoxz28KCrfJbNm\",\"email\":\"me@artalat.com\",\"id\":4}",
-      "5": "{\"firstName\":\"amna\",\"lastName\":\"junaid\",\"image\":\"\",\"realm\":\"\",\"username\":\"amnaj\",\"password\":\"$2a$10$hc1XIkin8pV4tXnMaMc9xeiwWjJtAMuHXIqSFQOALnY77T451p7I2\",\"email\":\"amna.junaid@blueeast.com\",\"emailVerified\":false,\"id\":5}"
+      "5": "{\"firstName\":\"amna\",\"lastName\":\"junaid\",\"image\":\"\",\"realm\":\"\",\"username\":\"amnaj\",\"password\":\"$2a$10$hc1XIkin8pV4tXnMaMc9xeiwWjJtAMuHXIqSFQOALnY77T451p7I2\",\"email\":\"amna.junaid@blueeast.com\",\"emailVerified\":false,\"id\":5}",
+      "6": "{\"firstName\":\"amna\",\"lastName\":\"mukhtar\",\"image\":\"string\",\"realm\":\"string\",\"username\":\"amnam\",\"password\":\"$2a$10$AcNmbCb7mxRMqXNIGV.qaepOMldqAXWVV/.2eeUPUHGQRqtehJx0S\",\"email\":\"amna.pawar2000@gmail.com\",\"emailVerified\":false,\"id\":6}"
     },
     "Googlemaps": {
       "1": "{\"location\":{\"lat\":10,\"lng\":10},\"id\":1}"
@@ -124,7 +123,9 @@
       "2": "{\"name\":\"Site of owner 1\",\"active\":true,\"location\":{\"lat\":0,\"lng\":0},\"image\":\"string\",\"ownerId\":1,\"id\":2}",
       "3": "{\"name\":\"sample site\",\"active\":true,\"location\":{\"lat\":0,\"lng\":0},\"image\":\"string\",\"ownerId\":5,\"id\":3}",
       "4": "{\"name\":\"xyz\",\"active\":true,\"location\":{\"lat\":0,\"lng\":0},\"image\":\"string\",\"ownerId\":5,\"id\":4}",
-      "5": "{\"name\":\"amna site\",\"active\":true,\"location\":{\"lat\":0,\"lng\":0},\"image\":\"string\",\"ownerId\":5,\"id\":5}"
+      "5": "{\"name\":\"amna site\",\"active\":true,\"location\":{\"lat\":0,\"lng\":0},\"image\":\"string\",\"ownerId\":5,\"id\":5}",
+      "6": "{\"name\":\"BlueEastHq\",\"active\":true,\"location\":{\"lat\":0,\"lng\":0},\"image\":\"string\",\"ownerId\":6,\"id\":6}",
+      "7": "{\"name\":\"BlueEast Site Office\",\"active\":true,\"location\":{\"lat\":0,\"lng\":0},\"image\":\"string\",\"ownerId\":6,\"id\":7}"
     }
   }
 }
